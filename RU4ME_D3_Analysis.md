@@ -24,3 +24,5 @@ Use Case 5: Validate An Observing Program <br>
 ![Gemini P1 D3  - Page 1 (7)](https://github.com/user-attachments/assets/d5a29481-8a59-41bb-9387-84961a3c7ae6)
 ![Gemini P1 D3  - Page 1 (8)](https://github.com/user-attachments/assets/5782e32b-b483-4d16-b07e-81d2e71f4df9)
 <br>
+Class Diagram <br>
+![Gemini P1 D3  - Page 1 (15)](https://github.com/user-attachments/assets/65c2b261-a413-425c-9d57-f10069dd114f)
