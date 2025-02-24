@@ -10,7 +10,7 @@ Use Case 2: Submit Science Plan <br>
 <br>
 
 Use Case 3: Validate Science Plan <br>
-![Gemini P1 D3  - Page 1 (16)](https://github.com/user-attachments/assets/6c231ad6-3c52-482e-a43d-1573ebb635eb)
+![Gemini P1 D3  - Page 1 (17)](https://github.com/user-attachments/assets/2aed2f89-3b91-4e77-bbd2-e7754ddb0159)
 ![Gemini P1 D3  - Page 1 (10)](https://github.com/user-attachments/assets/89d6b86c-c1f9-486e-905c-2916b4ba1065)
 ![Gemini P1 D3  - Page 1 (11)](https://github.com/user-attachments/assets/e546b8f4-4cbd-475a-9d05-b1220c894c3f)
 <br>
