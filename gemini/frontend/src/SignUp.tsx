@@ -1,4 +1,4 @@
-import { LoginForm } from "../components/login-form";
+import { SignUpForm } from "../components/sign-up-form";
 import { SpaceBackground } from "../components/space-background";
 
 function App() {
@@ -12,10 +12,10 @@ function App() {
               Space Observatory
             </h1>
             <p className="text-muted-foreground">
-              Welcome back! どちらの様ですか?
+              Sign up to explore the cosmos from your devices.
             </p>
           </div>
-          <LoginForm/>
+          <SignUpForm />
         </div>
       </div>
       <div className="relative hidden w-1/2 md:block bg-slate-600">
