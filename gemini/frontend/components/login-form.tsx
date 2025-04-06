@@ -8,7 +8,7 @@ import { z } from "zod"
 import { Button } from "./ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
 import { Input } from "./ui/input"
-import { toast } from "./ui/use-toast"
+
 
 
 const formSchema = z.object({
@@ -37,10 +37,10 @@ export function LoginForm() {
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false)
-      toast({
+      /* toast({
         title: "Account created!",
         description: "Welcome to Space Observatory.",
-      })
+      }) */
       console.log(values)
     }, 1000)
   }
