@@ -1,9 +1,11 @@
 import { LoginForm } from "../components/login-form";
 import { SpaceBackground } from "../components/space-background";
+import { Toaster } from "../components/ui/toaster";
 
 function App() {
   return (
     <>
+      <Toaster/>
       <main className="flex min-h-screen flex-col md:flex-row">
         <div className="flex w-full items-center justify-center p-6 md:w-1/2">
           <div className="w-full max-w-md space-y-8">

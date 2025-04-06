@@ -8,8 +8,7 @@ import { z } from "zod"
 import { Button } from "../components/ui/button"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../components/ui/form"
 import { Input } from "../components/ui/input"
-import { toast } from "../components/ui/use-toast"
-import React from "react"
+import { useToast } from "../hooks/use-toast"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -25,6 +24,7 @@ const formSchema = z.object({
 
 export function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

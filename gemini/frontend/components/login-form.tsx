@@ -8,6 +8,9 @@ import { z } from "zod"
 import { Button } from "./ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
 import { Input } from "./ui/input"
+import { useToast } from "../hooks/use-toast"
+import { ToastAction } from "@radix-ui/react-toast"
+import React from "react"
 
 
 
@@ -22,6 +25,7 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,13 +38,16 @@ export function LoginForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
 
-    // Simulate API call
+    // Replace with actual API call.
     setTimeout(() => {
       setIsLoading(false)
-      /* toast({
-        title: "Account created!",
-        description: "Welcome to Space Observatory.",
-      }) */
+      toast({
+        title: "Scheduled: Catch up ",
+        description: "Friday, February 10, 2023 at 5:57 PM",
+        action: (
+          <ToastAction altText="Goto schedule to undo">Undo</ToastAction>
+        ),
+      })
       console.log(values)
     }, 1000)
   }
