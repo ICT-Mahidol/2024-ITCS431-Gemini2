@@ -1,17 +1,21 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"  // Changed this line
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod"; // Changed this line
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { Button } from "./ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
-import { Input } from "./ui/input"
-import { useToast } from "../hooks/use-toast"
-import React from "react"
-
-
+import { Button } from "./ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
+import { Input } from "./ui/input";
+import { useToast } from "../hooks/use-toast";
 
 const formSchema = z.object({
   username: z.string().min(1, {
@@ -19,12 +23,12 @@ const formSchema = z.object({
   }),
   password: z.string().min(1, {
     message: "You must enter a password.",
-  })
-})
+  }),
+});
 
 export function LoginForm() {
-  const [isLoading, setIsLoading] = useState(false)
-  const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -32,45 +36,33 @@ export function LoginForm() {
       username: "",
       password: "",
     },
-  })
+  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true)
+    setIsLoading(true);
 
-    // Replace with actual API call.
-    /* setTimeout(() => {
-      setIsLoading(false)
-      toast({
-        title: "Account Created! ",
-        description: `sent: ${values.email}: ${values.password}`,
-      })
-      console.log(values)
-    }, 1000) */
-   
-
-    fetch('http://localhost:8080/api/v1/user/auth', {
-      method: 'POST',
+    fetch("http://localhost:8080/api/v1/user/auth", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(values)
-    })
-    .then(response => {
+      body: JSON.stringify(values),
+    }).then((response) => {
       if (response.ok) {
         toast({
           title: "Login Successful! ",
           description: `Welcome! ${values.username}`,
-        })
-        setIsLoading(false)
+        });
+        setIsLoading(false);
       } else {
         toast({
           title: "Something went wrong!",
           description: `Error Code: ${response.status}!`,
           variant: "destructive",
-        })
-        setIsLoading(false)
-      }  
-    })
+        });
+        setIsLoading(false);
+      }
+    });
   }
 
   return (
@@ -107,12 +99,14 @@ export function LoginForm() {
         </Button>
         <div className="text-center text-sm">
           Forgot your password?{" "}
-          <a href="/login" className="underline underline-offset-4 hover:text-primary">
+          <a
+            href="/login"
+            className="underline underline-offset-4 hover:text-primary"
+          >
             Reset your password
           </a>
         </div>
       </form>
     </Form>
-  )
+  );
 }
-
