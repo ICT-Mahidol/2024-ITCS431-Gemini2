@@ -1,0 +1,18 @@
+2025-04-07 14:33:50.609096+07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table [*]user (user_id integer not null, first_name varchar(255), last_name varchar(255), password varchar(255), role varchar(255), username varchar(255), primary key (user_id))"; expected "identifier"; SQL statement:
+create table user (user_id integer not null, first_name varchar(255), last_name varchar(255), password varchar(255), role varchar(255), username varchar(255), primary key (user_id)) [42001-232]
+2025-04-07 14:34:15.073543+07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table [*]user (user_id integer not null, first_name varchar(255), last_name varchar(255), password varchar(255), role varchar(255), username varchar(255), primary key (user_id))"; expected "identifier"; SQL statement:
+create table user (user_id integer not null, first_name varchar(255), last_name varchar(255), password varchar(255), role varchar(255), username varchar(255), primary key (user_id)) [42001-232]
+2025-04-07 17:26:13.528167+07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table [*]user (user_id integer not null, first_name varchar(255), last_name varchar(255), password varchar(255), role varchar(255), username varchar(255), primary key (user_id))"; expected "identifier"; SQL statement:
+create table user (user_id integer not null, first_name varchar(255), last_name varchar(255), password varchar(255), role varchar(255), username varchar(255), primary key (user_id)) [42001-232]
+2025-04-07 18:22:15.631771+07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table [*]user (user_id integer not null, first_name varchar(255), last_name varchar(255), password varchar(255), role varchar(255), username varchar(255), primary key (user_id))"; expected "identifier"; SQL statement:
+create table user (user_id integer not null, first_name varchar(255), last_name varchar(255), password varchar(255), role varchar(255), username varchar(255), primary key (user_id)) [42001-232]
+2025-04-07 18:22:29.500371+07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select u1_0.user_id,u1_0.first_name,u1_0.last_name,u1_0.password,u1_0.role,u1_0.username from [*]user u1_0 where u1_0.username=? and u1_0.password=?"; expected "identifier"; SQL statement:
+select u1_0.user_id,u1_0.first_name,u1_0.last_name,u1_0.password,u1_0.role,u1_0.username from user u1_0 where u1_0.username=? and u1_0.password=? [42001-232]
+2025-04-07 18:26:00.222853+07:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "select u1_0.user_id,u1_0.first_name,u1_0.last_name,u1_0.password,u1_0.role,u1_0.username from [*]user u1_0 where u1_0.username=? and u1_0.password=?"; expected "identifier"; SQL statement:
+select u1_0.user_id,u1_0.first_name,u1_0.last_name,u1_0.password,u1_0.role,u1_0.username from user u1_0 where u1_0.username=? and u1_0.password=? [42001-232]
