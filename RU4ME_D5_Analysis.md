@@ -1,14 +1,16 @@
 **Use case 1**: Create Science Plan <br>
-![image](https://github.com/user-attachments/assets/c3db3ac7-f046-4e70-a9c3-4f7e0fb0934c)
-![image](https://github.com/user-attachments/assets/5acd5ac8-652d-4d67-8f14-cd2bfacf7633)
+![Gemini P1 D3  - Page 1](https://github.com/user-attachments/assets/1251ca64-d166-41cc-acf3-1bd8188ec387)
+![Gemini P1 D3  - Page 1 (1)](https://github.com/user-attachments/assets/785522b0-7c68-4b9a-a62b-7ff5846b1e5d)
+
 
 **Use case  2**: Submit Science Plan <br>
 ![image](https://github.com/user-attachments/assets/6f1bd3ba-7a69-493a-a9b9-0608aa5bbf62)
-![image](https://github.com/user-attachments/assets/965520e7-2bf8-4347-8904-160df37f1895)
+![Gemini P1 D3  - Page 1 (2)](https://github.com/user-attachments/assets/e8f2466d-7ed9-4915-837c-aac5765bfc72)
 
 **Use case 3**: Validate Science Program <br>
-![image](https://github.com/user-attachments/assets/02936c1b-3cbc-4e22-a037-65a3deb3dc0e)
-![image](https://github.com/user-attachments/assets/1d3f00cd-c8ee-4530-b3b2-3b042f7a75ab)
+![Gemini P1 D3  - Page 1 (3)](https://github.com/user-attachments/assets/339214e1-19c9-47f9-b1d2-600611253466)
+![Gemini P1 D3  - Page 1 (4)](https://github.com/user-attachments/assets/febc94b8-32f1-452b-a66c-25ff7d2b3a9b)
 
 **Class Diagram** <br>
-![image](https://github.com/user-attachments/assets/a1dff695-c30b-435e-9efe-27fa049e316d)
+![Gemini P1 D3  - Page 1 (5)](https://github.com/user-attachments/assets/3d5589b5-5e6a-4d57-b59d-34fc07af581b)
+
