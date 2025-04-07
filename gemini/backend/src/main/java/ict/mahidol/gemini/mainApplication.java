@@ -1,4 +1,4 @@
-package ict.mahidol.gemini.main;
+package ict.mahidol.gemini;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
