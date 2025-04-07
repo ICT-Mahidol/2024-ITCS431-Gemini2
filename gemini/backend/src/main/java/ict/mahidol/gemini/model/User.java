@@ -1,23 +1,45 @@
 package ict.mahidol.gemini.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "`user`")
 public class User {
-    protected int userId;
-    protected String firstName;
-    protected String lastName;
-    protected String username;
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private int userId;
+    private String firstName;
+    private String lastName;
+    private String username;
     private String password;
-    protected String role;
+    private String role;
 
-    public User(int userId, String firstName, String lastName, String username, String role)
+    public User()
     {
-        this.userId = userId;
+        super();
+    }
+
+    public User(String firstName, String lastName, String username, String password, String role)
+    {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
+        this.password = password;
         this.role = role;
+    }
+
+    public String getUsername()
+    {
+        return this.username;
+    }
+
+    public String getPassword()
+    {
+        return this.password;
     }
 
     @Override
