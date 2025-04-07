@@ -9,14 +9,13 @@ import { Button } from "./ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
 import { Input } from "./ui/input"
 import { useToast } from "../hooks/use-toast"
-import { ToastAction } from "@radix-ui/react-toast"
 import React from "react"
 
 
 
 const formSchema = z.object({
-  email: z.string().email({
-    message: "Please enter a valid email address.",
+  username: z.string().min(1, {
+    message: "Please enter a username.",
   }),
   password: z.string().min(1, {
     message: "You must enter a password.",
@@ -30,7 +29,7 @@ export function LoginForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   })
@@ -39,14 +38,39 @@ export function LoginForm() {
     setIsLoading(true)
 
     // Replace with actual API call.
-    setTimeout(() => {
+    /* setTimeout(() => {
       setIsLoading(false)
       toast({
         title: "Account Created! ",
         description: `sent: ${values.email}: ${values.password}`,
       })
       console.log(values)
-    }, 1000)
+    }, 1000) */
+   
+
+    fetch('http://localhost:8080/api/v1/user/auth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(values)
+    })
+    .then(response => {
+      if (response.ok) {
+        toast({
+          title: "Login Successful! ",
+          description: `Welcome! ${values.username}`,
+        })
+        setIsLoading(false)
+      } else {
+        toast({
+          title: "Something went wrong!",
+          description: `Error Code: ${response.status}!`,
+          variant: "destructive",
+        })
+        setIsLoading(false)
+      }  
+    })
   }
 
   return (
@@ -54,12 +78,12 @@ export function LoginForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="email"
+          name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="you@example.com" type="email" {...field} />
+                <Input placeholder="Username" type="text" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
