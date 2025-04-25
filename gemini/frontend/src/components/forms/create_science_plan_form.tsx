@@ -3,6 +3,7 @@ import {
   DialogDescription,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@radix-ui/react-dialog";
 import { DialogContent, DialogHeader } from "../ui/dialog";
 import { Label } from "@radix-ui/react-label";
@@ -18,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { submitSciencePlan } from "@/api/submit_science_plan";
 
 export function CreateSciencePlanForm() {
   // TODO
@@ -36,7 +38,7 @@ export function CreateSciencePlanForm() {
           <Input type="number" step="0.01" id="email" placeholder="Funding" />
         </span>
 
-        <div className="flex gap-5">
+        <div className="gap-5 grid grid-cols-3 content-center">
           <div>
             <Label htmlFor="email">StartDate</Label>
             <Input type="date" id="email" placeholder="Objective" />
@@ -63,7 +65,7 @@ export function CreateSciencePlanForm() {
           </div>
         </div>
 
-        <div className="flex gap-5">
+        <div className="gap-5 grid grid-cols-3 content-center">
           <div>
             <Label htmlFor="fileType">File Type</Label>
             <Select>
@@ -104,7 +106,7 @@ export function CreateSciencePlanForm() {
         ) : (
           <CreateSciencePlanDataProcessingBlackWhite />
         )}
-        <Button variant="outline">Submit</Button>
+        {confirmCreateSciencePlan()}
       </div>
     </main>
   );
@@ -113,7 +115,7 @@ export function CreateSciencePlanForm() {
 export function CreateSciencePlanDataProcessingBlackWhite() {
   return (
     <main>
-      <div className="flex gap-4">
+      <div className="gap-5 grid grid-cols-3 content-center">
         <div>
           <Label htmlFor="exposure">Exposure</Label>
           <Input
@@ -137,7 +139,7 @@ export function CreateSciencePlanDataProcessingBlackWhite() {
           <Input type="shadow" step="0.01" id="shadow" placeholder="Shadow" />
         </div>
       </div>
-      <div className="flex gap-4 mt-2.5">
+      <div className="mt-2.5 flex gap-5 grid grid-cols-3 content-center">
         <div>
           <Label htmlFor="luminance">White</Label>
           <Input type="number" step="0.01" id="white" placeholder="White" />
@@ -157,7 +159,7 @@ export function CreateSciencePlanDataProcessingBlackWhite() {
 export function CreateSciencePlanDataProcessingColor() {
   return (
     <main>
-      <div className="flex gap-4">
+      <div className="gap-5 grid grid-cols-3 content-center">
         <div>
           <Label htmlFor="exposure">Exposure</Label>
           <Input
@@ -186,7 +188,7 @@ export function CreateSciencePlanDataProcessingColor() {
           />
         </div>
       </div>
-      <div className="flex gap-4 mt-2.5">
+      <div className="mt-2.5 gap-5 grid grid-cols-3 content-center">
         <div>
           <Label htmlFor="luminance">Luminance</Label>
           <Input
@@ -198,11 +200,49 @@ export function CreateSciencePlanDataProcessingColor() {
         </div>
         <div>
           <Label htmlFor="hue">Hue</Label>
-          <Input type="number" step="0.01" id="hue" placeholder="hue" />
+          <Input type="number" step="0.01" id="hue" placeholder="Hue" />
         </div>
         <Label className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white cursor-default select-none bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-600">
           Color Mode
         </Label>
+      </div>
+    </main>
+  );
+}
+
+function confirmCreateSciencePlan() {
+  return (
+    <main>
+      <div className="mt-2.5">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" className="w-full">
+              Submit
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>
+                Are you sure to create a new science plan?
+              </DialogTitle>
+              <DialogDescription className="text-muted-foreground">
+                This action will create a new science plan with status CREATED
+                for waiting for SUBMITTED later.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid grid-cols-2 gap-8">
+              <DialogClose>
+                <Button variant="outline" className="w-full">
+                  Cancle
+                </Button>
+              </DialogClose>
+              <Button variant="destructive" className="w-full">
+                Submit
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </main>
   );

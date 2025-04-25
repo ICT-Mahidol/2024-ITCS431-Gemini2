@@ -31,6 +31,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useState } from "react";
 import { CreateSciencePlanForm } from "@/components/forms/create_science_plan_form";
 
 export const Route = createFileRoute("/science_plan/")({
@@ -79,20 +80,25 @@ function RouteComponent() {
   //     </div>
   //   </main>
   // );
-
+  const [selectedStatus, setSelectedStatus] = useState("");
   return (
     <main>
       <div>
-        <MainComponent />
-        {SciencePlansMock.map((val) => {
-          return SciencePlanCard(val.planId, val.planName, val.planStatus);
-        })}
+        <MainComponent onStatusChange={setSelectedStatus} />
+        {SciencePlansMock.filter(
+          (val) =>
+            selectedStatus === "ALL" ||
+            !selectedStatus ||
+            val.planStatus === selectedStatus
+        ).map((val) =>
+          SciencePlanCard(val.planId, val.planName, val.planStatus)
+        )}
       </div>
     </main>
   );
 }
 
-function MainComponent() {
+function MainComponent({ onStatusChange }) {
   return (
     <main>
       <div className="flex items-center justify-between pb-3">
@@ -115,11 +121,12 @@ function MainComponent() {
       </div>
 
       <div className="flex ml-4">
-        <Select>
+        <Select onValueChange={(value) => onStatusChange(value)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select Status" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="ALL">ALL</SelectItem>
             <SelectItem value="CREATED">CREATED</SelectItem>
             <SelectItem value="SUBMITTED">SUBMITTED</SelectItem>
             <SelectItem value="TESTED">TESTED</SelectItem>
