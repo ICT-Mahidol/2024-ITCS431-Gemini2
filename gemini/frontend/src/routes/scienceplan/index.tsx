@@ -20,7 +20,7 @@ import {
 import { useState } from "react";
 import { CreateSciencePlanForm } from "@/components/forms/create_science_plan_form";
 
-export const Route = createFileRoute("/science_plan/")({
+export const Route = createFileRoute("/scienceplan/")({
   component: RouteComponent,
 });
 
@@ -66,6 +66,7 @@ function RouteComponent() {
   // );
 
   // use this for DEV for faster don't need loading :)
+  // TODO: science plan page ui
   return (
     <main>
       <div>
