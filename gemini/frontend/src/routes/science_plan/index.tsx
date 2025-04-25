@@ -98,7 +98,7 @@ function RouteComponent() {
   );
 }
 
-function MainComponent({ onStatusChange }) {
+function MainComponent({ onStatusChange }: { onStatusChange: any }) {
   return (
     <main>
       <div className="flex items-center justify-between pb-3">

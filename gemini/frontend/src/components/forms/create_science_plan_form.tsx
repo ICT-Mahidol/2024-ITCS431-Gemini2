@@ -20,6 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { submitSciencePlan } from "@/api/submit_science_plan";
+import {
+  createSciencePlanSchema,
+  createSciencePlanDataprocessingSchema,
+} from "./schemas";
 
 export function CreateSciencePlanForm() {
   // TODO
