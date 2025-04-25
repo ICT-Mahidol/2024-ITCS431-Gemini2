@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/science_plan/")({
+export const Route = createFileRoute("/scienceplan/")({
   component: RouteComponent,
 });
 
@@ -37,7 +37,6 @@ function RouteComponent() {
   }
 
   // TODO: science plan page ui
-
   return (
     <main>
       <div>

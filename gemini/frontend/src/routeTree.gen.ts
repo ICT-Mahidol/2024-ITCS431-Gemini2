@@ -11,18 +11,18 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as ScienceplanImport } from './routes/science_plan'
+import { Route as ScienceplanImport } from './routes/scienceplan'
 import { Route as IndexImport } from './routes/index'
-import { Route as ScienceplanIndexImport } from './routes/science_plan/index'
-import { Route as ScienceplanPlanidImport } from './routes/science_plan/$plan_id'
-import { Route as ScienceplanValidateIndexImport } from './routes/science_plan/validate/index'
-import { Route as ScienceplanValidatePlanidImport } from './routes/science_plan/validate/$plan_id'
+import { Route as ScienceplanIndexImport } from './routes/scienceplan/index'
+import { Route as ScienceplanPlanidImport } from './routes/scienceplan/$plan_id'
+import { Route as ScienceplanValidateIndexImport } from './routes/scienceplan/validate/index'
+import { Route as ScienceplanValidatePlanidImport } from './routes/scienceplan/validate/$plan_id'
 
 // Create/Update Routes
 
 const ScienceplanRoute = ScienceplanImport.update({
-  id: '/science_plan',
-  path: '/science_plan',
+  id: '/scienceplan',
+  path: '/scienceplan',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -67,38 +67,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/science_plan': {
-      id: '/science_plan'
-      path: '/science_plan'
-      fullPath: '/science_plan'
+    '/scienceplan': {
+      id: '/scienceplan'
+      path: '/scienceplan'
+      fullPath: '/scienceplan'
       preLoaderRoute: typeof ScienceplanImport
       parentRoute: typeof rootRoute
     }
-    '/science_plan/$plan_id': {
-      id: '/science_plan/$plan_id'
+    '/scienceplan/$plan_id': {
+      id: '/scienceplan/$plan_id'
       path: '/$plan_id'
-      fullPath: '/science_plan/$plan_id'
+      fullPath: '/scienceplan/$plan_id'
       preLoaderRoute: typeof ScienceplanPlanidImport
       parentRoute: typeof ScienceplanImport
     }
-    '/science_plan/': {
-      id: '/science_plan/'
+    '/scienceplan/': {
+      id: '/scienceplan/'
       path: '/'
-      fullPath: '/science_plan/'
+      fullPath: '/scienceplan/'
       preLoaderRoute: typeof ScienceplanIndexImport
       parentRoute: typeof ScienceplanImport
     }
-    '/science_plan/validate/$plan_id': {
-      id: '/science_plan/validate/$plan_id'
+    '/scienceplan/validate/$plan_id': {
+      id: '/scienceplan/validate/$plan_id'
       path: '/validate/$plan_id'
-      fullPath: '/science_plan/validate/$plan_id'
+      fullPath: '/scienceplan/validate/$plan_id'
       preLoaderRoute: typeof ScienceplanValidatePlanidImport
       parentRoute: typeof ScienceplanImport
     }
-    '/science_plan/validate/': {
-      id: '/science_plan/validate/'
+    '/scienceplan/validate/': {
+      id: '/scienceplan/validate/'
       path: '/validate'
-      fullPath: '/science_plan/validate'
+      fullPath: '/scienceplan/validate'
       preLoaderRoute: typeof ScienceplanValidateIndexImport
       parentRoute: typeof ScienceplanImport
     }
@@ -127,55 +127,55 @@ const ScienceplanRouteWithChildren = ScienceplanRoute._addFileChildren(
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/science_plan': typeof ScienceplanRouteWithChildren
-  '/science_plan/$plan_id': typeof ScienceplanPlanidRoute
-  '/science_plan/': typeof ScienceplanIndexRoute
-  '/science_plan/validate/$plan_id': typeof ScienceplanValidatePlanidRoute
-  '/science_plan/validate': typeof ScienceplanValidateIndexRoute
+  '/scienceplan': typeof ScienceplanRouteWithChildren
+  '/scienceplan/$plan_id': typeof ScienceplanPlanidRoute
+  '/scienceplan/': typeof ScienceplanIndexRoute
+  '/scienceplan/validate/$plan_id': typeof ScienceplanValidatePlanidRoute
+  '/scienceplan/validate': typeof ScienceplanValidateIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/science_plan/$plan_id': typeof ScienceplanPlanidRoute
-  '/science_plan': typeof ScienceplanIndexRoute
-  '/science_plan/validate/$plan_id': typeof ScienceplanValidatePlanidRoute
-  '/science_plan/validate': typeof ScienceplanValidateIndexRoute
+  '/scienceplan/$plan_id': typeof ScienceplanPlanidRoute
+  '/scienceplan': typeof ScienceplanIndexRoute
+  '/scienceplan/validate/$plan_id': typeof ScienceplanValidatePlanidRoute
+  '/scienceplan/validate': typeof ScienceplanValidateIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/science_plan': typeof ScienceplanRouteWithChildren
-  '/science_plan/$plan_id': typeof ScienceplanPlanidRoute
-  '/science_plan/': typeof ScienceplanIndexRoute
-  '/science_plan/validate/$plan_id': typeof ScienceplanValidatePlanidRoute
-  '/science_plan/validate/': typeof ScienceplanValidateIndexRoute
+  '/scienceplan': typeof ScienceplanRouteWithChildren
+  '/scienceplan/$plan_id': typeof ScienceplanPlanidRoute
+  '/scienceplan/': typeof ScienceplanIndexRoute
+  '/scienceplan/validate/$plan_id': typeof ScienceplanValidatePlanidRoute
+  '/scienceplan/validate/': typeof ScienceplanValidateIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/science_plan'
-    | '/science_plan/$plan_id'
-    | '/science_plan/'
-    | '/science_plan/validate/$plan_id'
-    | '/science_plan/validate'
+    | '/scienceplan'
+    | '/scienceplan/$plan_id'
+    | '/scienceplan/'
+    | '/scienceplan/validate/$plan_id'
+    | '/scienceplan/validate'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/science_plan/$plan_id'
-    | '/science_plan'
-    | '/science_plan/validate/$plan_id'
-    | '/science_plan/validate'
+    | '/scienceplan/$plan_id'
+    | '/scienceplan'
+    | '/scienceplan/validate/$plan_id'
+    | '/scienceplan/validate'
   id:
     | '__root__'
     | '/'
-    | '/science_plan'
-    | '/science_plan/$plan_id'
-    | '/science_plan/'
-    | '/science_plan/validate/$plan_id'
-    | '/science_plan/validate/'
+    | '/scienceplan'
+    | '/scienceplan/$plan_id'
+    | '/scienceplan/'
+    | '/scienceplan/validate/$plan_id'
+    | '/scienceplan/validate/'
   fileRoutesById: FileRoutesById
 }
 
@@ -200,36 +200,36 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/science_plan"
+        "/scienceplan"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/science_plan": {
-      "filePath": "science_plan.tsx",
+    "/scienceplan": {
+      "filePath": "scienceplan.tsx",
       "children": [
-        "/science_plan/$plan_id",
-        "/science_plan/",
-        "/science_plan/validate/$plan_id",
-        "/science_plan/validate/"
+        "/scienceplan/$plan_id",
+        "/scienceplan/",
+        "/scienceplan/validate/$plan_id",
+        "/scienceplan/validate/"
       ]
     },
-    "/science_plan/$plan_id": {
-      "filePath": "science_plan/$plan_id.tsx",
-      "parent": "/science_plan"
+    "/scienceplan/$plan_id": {
+      "filePath": "scienceplan/$plan_id.tsx",
+      "parent": "/scienceplan"
     },
-    "/science_plan/": {
-      "filePath": "science_plan/index.tsx",
-      "parent": "/science_plan"
+    "/scienceplan/": {
+      "filePath": "scienceplan/index.tsx",
+      "parent": "/scienceplan"
     },
-    "/science_plan/validate/$plan_id": {
-      "filePath": "science_plan/validate/$plan_id.tsx",
-      "parent": "/science_plan"
+    "/scienceplan/validate/$plan_id": {
+      "filePath": "scienceplan/validate/$plan_id.tsx",
+      "parent": "/scienceplan"
     },
-    "/science_plan/validate/": {
-      "filePath": "science_plan/validate/index.tsx",
-      "parent": "/science_plan"
+    "/scienceplan/validate/": {
+      "filePath": "scienceplan/validate/index.tsx",
+      "parent": "/scienceplan"
     }
   }
 }
