@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import { Role } from "./enums";
 
 // Keep the interface for payload structure
 interface JWTPayload {
@@ -90,9 +91,16 @@ export class CookieHelper {
    * Gets the user role from the JWT payload.
    * Returns the role string or null if not available or invalid.
    */
-  get userRole(): string | null {
+  get role(): Role | null {
     const currentPayload = this.payload; // Get fresh payload
-    return currentPayload?.role ?? null; // Use optional chaining and nullish coalescing
+    if (!currentPayload) {
+      return null; // If payload is invalid, return null
+    }
+    if (currentPayload.role === Role.ASTRONOMER) {
+      return Role.ASTRONOMER;
+    } else {
+      return Role.SCIENCE_OBSERVER;
+    }
   }
 
   /**

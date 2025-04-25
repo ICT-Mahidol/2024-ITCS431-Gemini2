@@ -1,4 +1,9 @@
-import { ColorType, FileQuality, FileType, PlanStatus } from "./enums";
+import { ColorType, FileQuality, FileType, PlanStatus, Role } from "./enums";
+
+export interface Payload {
+  userName: string;
+  role: Role;
+}
 
 export interface SciencePlan {
   planId: number;
