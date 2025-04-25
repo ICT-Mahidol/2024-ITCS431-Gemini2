@@ -39,7 +39,7 @@ export const Route = createFileRoute("/science_plan/")({
 });
 
 function RouteComponent() {
-  //TODO: dropdown menu for status selection
+  const [selectedStatus, setSelectedStatus] = useState("");
 
   // const { isPending, isError, data, error } = useQuery({
   //   queryKey: ["sciencePlans"],
@@ -57,7 +57,7 @@ function RouteComponent() {
 
   //   return (
   //     <main>
-  //       <MainComponent />
+  //       <MainComponent onStatusChange={setSelectedStatus} />
   //       <div>
   //         {SciencePlansMock.map((val) => {
   //           // use mock instead for DEV
@@ -68,19 +68,18 @@ function RouteComponent() {
   //   );
   // }
 
-  // // TODO: science plan page ui
-
   // return (
   //   <main>
   //     <div>
-  //       <MainComponent />
+  //       <MainComponent onStatusChange={setSelectedStatus} />
   //       {data.map((val) => {
   //         return SciencePlanCard(val.planId, val.planName, val.planStatus);
   //       })}
   //     </div>
   //   </main>
   // );
-  const [selectedStatus, setSelectedStatus] = useState("");
+
+  // use this for DEV for faster don't need loading :)
   return (
     <main>
       <div>
