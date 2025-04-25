@@ -1,18 +1,7 @@
-import { getSciencePlans } from "@/api/get_science_plans";
 import { SciencePlanCard } from "@/components/science_plan_card";
 import { SciencePlansMock } from "@/lib/mock_data";
-import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -28,9 +17,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { CreateSciencePlanForm } from "@/components/forms/create_science_plan_form";
 
@@ -97,7 +83,9 @@ function RouteComponent() {
   );
 }
 
-function MainComponent({ onStatusChange }: { onStatusChange: any }) {
+function MainComponent({
+  onStatusChange,
+}: Readonly<{ onStatusChange: (status: string) => void }>) {
   return (
     <main>
       <div className="flex items-center justify-between pb-3">

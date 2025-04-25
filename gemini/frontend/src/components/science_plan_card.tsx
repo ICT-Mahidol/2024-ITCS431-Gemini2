@@ -9,26 +9,17 @@ import {
   DialogOverlay,
   DialogPortal,
 } from "@radix-ui/react-dialog";
-import { FiTrash2, FiChevronRight } from "react-icons/fi";
 import { Button } from "./ui/button";
 import { DialogFooter, DialogHeader } from "./ui/dialog";
 import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogCancel,
-  AlertDialogAction,
-  AlertDialogPortal,
-} from "@radix-ui/react-alert-dialog";
-import {
-  AlertDialogHeader,
-  AlertDialogFooter,
-  AlertDialogOverlay,
-} from "./ui/alert-dialog";
-// const apiUrl = process.env.VITE_API_URL;
-const apiUrl = "http://localhost:8080/api/v1";
+  IconBrandTelegram,
+  IconFlaskFilled,
+  IconTrashFilled,
+} from "@tabler/icons-react";
+import { useMutation } from "@tanstack/react-query";
+import { testSciencePlan } from "@/api/test_science_plan";
+import { submitSciencePlan } from "@/api/submit_science_plan";
+import { deleteSciencePlan } from "@/api/delete_science_plan";
 
 function StatusBackgroundColor(status: PlanStatus): string {
   switch (status) {
@@ -43,12 +34,12 @@ function StatusBackgroundColor(status: PlanStatus): string {
   }
 }
 
-function getStatusIcon(status: PlanStatus) {
+function getStatusIcon(status: PlanStatus, planId: number) {
   switch (status) {
     case "CREATED":
-      return validateSciencePlanDialog();
+      return <TestSciencePlanIcon />;
     case "TESTED":
-      return submitSciencePlanDialog();
+      return <SubmitSciencePlanIcon planId={planId} />;
     case "SUBMITTED":
       return <div></div>;
     default:
@@ -87,8 +78,8 @@ export function SciencePlanCard(
 
           {/* Right Side: Actions */}
           <div className="flex items-center space-x-3">
-            {deleteSciencePlanDialogConfirm()}
-            <div>{getStatusIcon(planStatus)}</div>
+            {DeleteSciencePlanDialogConfirm()}
+            <div>{getStatusIcon(planStatus, planId)}</div>
           </div>
         </div>
         {/* </a> */}
@@ -98,12 +89,21 @@ export function SciencePlanCard(
 }
 
 // Dialog popup below VVVVVV
-function deleteSciencePlanDialogConfirm() {
+function DeleteSciencePlanDialogConfirm() {
+  const mutation = useMutation({
+    mutationFn: deleteSciencePlan,
+    onSuccess: (data) => {
+      console.log("Science plan submitted successfully:", data);
+    },
+    onError: (error) => {
+      console.error("Error submitting science plan:", error);
+    },
+  });
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button className="bg-transparent hover:bg-red-300">
-          <FiTrash2 className="text-red-600 w-6 h-6" />
+          <IconTrashFilled color="red" />
         </Button>
       </DialogTrigger>
 
@@ -115,16 +115,22 @@ function deleteSciencePlanDialogConfirm() {
             <DialogTitle>Are you sure to delete this science plan?</DialogTitle>
             <DialogDescription>
               <span className="text-gray-500">
-                This action cannot be undone. It will permanently delete this
-                plan.
+                This action cannot be undone.
               </span>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="secondary">Cancle</Button>
+              <Button variant="secondary">Cancel</Button>
             </DialogClose>
-            <Button variant="destructive">Delete</Button>
+            <Button
+              onClick={() => {
+                mutation.mutate();
+              }}
+              variant="destructive"
+            >
+              Delete
+            </Button>
           </DialogFooter>
         </DialogContent>
       </DialogPortal>
@@ -132,28 +138,22 @@ function deleteSciencePlanDialogConfirm() {
   );
 }
 
-function submitSciencePlanDialog() {
+function SubmitSciencePlanIcon({ planId }: { planId: number }) {
+  const mutation = useMutation({
+    mutationFn: submitSciencePlan,
+    onSuccess: (data) => {
+      console.log("Science plan submitted successfully:", data);
+    },
+    onError: (error) => {
+      console.error("Error submitting science plan:", error);
+    },
+  });
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button className="bg-transparent hover:bg-blue-400">
           <div className="text-blue-600">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={24}
-              height={24}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="icon icon-tabler icons-tabler-outline icon-tabler-send"
-            >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M10 14l11 -11" />
-              <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5" />
-            </svg>
+            <IconBrandTelegram />
           </div>
         </Button>
       </DialogTrigger>
@@ -166,7 +166,7 @@ function submitSciencePlanDialog() {
             <DialogTitle>Are you sure to submit this science plan?</DialogTitle>
             <DialogDescription>
               <span className="text-gray-500">
-                This action cannot be undone. It will submit this science plan.
+                This action cannot be undone.
               </span>
             </DialogDescription>
           </DialogHeader>
@@ -175,6 +175,9 @@ function submitSciencePlanDialog() {
               <Button variant="secondary">Cancle</Button>
             </DialogClose>
             <Button
+              onClick={() => {
+                mutation.mutate(planId);
+              }}
               variant="destructive"
               className="bg-blue-500 hover:bg-blue-700"
             >
@@ -187,29 +190,22 @@ function submitSciencePlanDialog() {
   );
 }
 
-function validateSciencePlanDialog() {
+function TestSciencePlanIcon() {
+  const mutation = useMutation({
+    mutationFn: testSciencePlan,
+    onSuccess: (data) => {
+      console.log("Science plan tested successfully:", data);
+    },
+    onError: (error) => {
+      console.error("Error testing science plan:", error);
+    },
+  });
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button className="bg-transparent hover:bg-purple-300">
           <div className="text-purple-600">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={24}
-              height={24}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="icon icon-tabler icons-tabler-outline icon-tabler-flask-2"
-            >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M6.1 15h11.8" />
-              <path d="M14 3v7.342a6 6 0 0 1 1.318 10.658h-6.635a6 6 0 0 1 1.317 -10.66v-7.34h4z" />
-              <path d="M9 3h6" />
-            </svg>
+            <IconFlaskFilled />
           </div>
         </Button>
       </DialogTrigger>
@@ -219,25 +215,25 @@ function validateSciencePlanDialog() {
 
         <DialogContent className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-xl shadow-lg max-w-md w-full">
           <DialogHeader>
-            <DialogTitle>
-              Are you sure to validate this science plan?
-            </DialogTitle>
+            <DialogTitle>Are you sure to test this science plan?</DialogTitle>
             <DialogDescription>
               <span className="text-gray-500">
-                This action cannot be undone. It will validation will be
-                completed after validation.
+                This action cannot be undone.
               </span>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="secondary">Cancle</Button>
+              <Button variant="secondary">Cancel</Button>
             </DialogClose>
             <Button
+              onClick={() => {
+                mutation.mutate();
+              }}
               variant="destructive"
               className="bg-purple-600 hover:bg-purple-800"
             >
-              Validate
+              Test
             </Button>
           </DialogFooter>
         </DialogContent>

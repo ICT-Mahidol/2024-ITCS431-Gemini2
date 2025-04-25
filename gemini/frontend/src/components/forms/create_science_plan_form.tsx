@@ -1,17 +1,15 @@
 import {
   Dialog,
+  DialogContent,
   DialogDescription,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
-} from "@radix-ui/react-dialog";
-import { DialogContent, DialogHeader } from "../ui/dialog";
-import { Label } from "@radix-ui/react-label";
-import { Switch } from "@radix-ui/react-switch";
+  DialogClose, // Import DialogClose
+} from "@/components/ui/dialog"; // Assuming Dialog is from ui
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -19,235 +17,509 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { submitSciencePlan } from "@/api/submit_science_plan";
 import {
-  createSciencePlanSchema,
-  createSciencePlanDataprocessingSchema,
-} from "./schemas";
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form"; // Use Form components from ui
+import { useForm } from "react-hook-form";
+import { createSciencePlanSchema } from "./schemas";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ColorType, FileQuality, FileType } from "@/lib/enums";
+// import { useMutation } from "@tanstack/react-query"; // If submitting via RQ
+// import { createSciencePlan } from "@/api/create_science_plan"; // Import your API function
 
 export function CreateSciencePlanForm() {
-  // TODO
-  const [mode, setMode] = useState("color");
+  // const mutation = useMutation({ mutationFn: createSciencePlan, ... }); // Setup mutation if needed
+
+  const form = useForm<z.infer<typeof createSciencePlanSchema>>({
+    resolver: zodResolver(createSciencePlanSchema),
+    defaultValues: {
+      planName: "",
+      funding: 0,
+      objective: "",
+      startDate: "", // Default empty string for date inputs
+      endDate: "",
+      dataProcessingReq: {
+        fileType: FileType.JPEG,
+        fileQuality: FileQuality.FINE,
+        colorType: ColorType.COLOR,
+        contrast: 0,
+        exposure: 0,
+        brightness: 0,
+        saturation: 0,
+        luminance: 0,
+        hue: 0,
+        highlight: 0,
+        shadows: 0,
+        whites: 0,
+        blacks: 0,
+      },
+    },
+  });
+
+  // Watch the colorType field to conditionally render sections
+  const watchedColorType = form.watch("dataProcessingReq.colorType");
+
+  // This function will be called ONLY after successful validation
+  // function onSubmit(values: z.infer<typeof createSciencePlanSchema>) {
+  //   console.log("Form Submitted (Validated):", values);
+  //   // mutation.mutate(values); // Trigger your API call here
+  //   // NOTE: The dialog confirmation logic needs adjustment (see below)
+  // }
+
+  // Handle the actual submission *after* confirmation in the dialog
+  const handleConfirmSubmit = () => {
+    const currentValues = form.getValues(); // Get current form values
+    console.log("Confirmed Submit:", currentValues);
+    // mutation.mutate(currentValues); // Call mutation with current values
+  };
+
   return (
-    <main>
-      <div className="grid w-full items-center gap-3">
-        <Label htmlFor="email">Plan Name</Label>
-        <Input type="text" id="email" placeholder="Plan Name" />
+    // Form Provider provides context to FormField etc.
+    <Form {...form}>
+      {/* form.handleSubmit wraps your onSubmit and performs validation */}
+      {/* We will trigger submission from the Dialog's confirm button */}
+      <form onSubmit={(e) => e.preventDefault} className="space-y-4">
+        {" "}
+        {/* Prevent default form submission */}
+        <FormField
+          control={form.control}
+          name="planName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Plan Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter Plan Name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="objective"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Objective</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter Objective" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="funding"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Funding</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  step="0.01"
+                  placeholder="Enter Funding Amount"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="startDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Start Date</FormLabel>
+                <FormControl>
+                  <Input type="date" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="endDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>End Date</FormLabel>
+                <FormControl>
+                  <Input type="date" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        {/* --- Data Processing Section --- */}
+        <h3 className="text-lg font-medium border-t pt-4 mt-4">
+          Data Processing Requirements
+        </h3>
+        <FormField
+          control={form.control}
+          name="dataProcessingReq.colorType"
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel>Picture Color Mode</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="flex items-center space-x-4"
+                >
+                  <FormItem className="flex items-center space-x-2">
+                    <FormControl>
+                      <RadioGroupItem value={ColorType.COLOR} id="color" />
+                    </FormControl>
+                    <FormLabel htmlFor="color" className="font-normal">
+                      Color
+                    </FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-2">
+                    <FormControl>
+                      <RadioGroupItem value={ColorType.BW} id="bw" />
+                    </FormControl>
+                    <FormLabel htmlFor="bw" className="font-normal">
+                      Black & White
+                    </FormLabel>
+                  </FormItem>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <FormField
+            control={form.control}
+            name="dataProcessingReq.fileType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>File Type</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select File Type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {Object.values(FileType).map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <Label htmlFor="email">Objective</Label>
-        <Input type="text" id="email" placeholder="Objective" />
+          <FormField
+            control={form.control}
+            name="dataProcessingReq.fileQuality"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>File Quality</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select File Quality" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {Object.values(FileQuality).map((quality) => (
+                      <SelectItem key={quality} value={quality}>
+                        {quality}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <span className="">
-          <Label htmlFor="email">Funding</Label>
-          <Input type="number" step="0.01" id="email" placeholder="Funding" />
-        </span>
-
-        <div className="gap-5 grid grid-cols-3 content-center">
-          <div>
-            <Label htmlFor="email">StartDate</Label>
-            <Input type="date" id="email" placeholder="Objective" />
-          </div>
-          <div>
-            <Label htmlFor="email">EndDate</Label>
-            <Input type="date" id="email" placeholder="Objective" />
-          </div>
-          <div>
-            <Label htmlFor="black&whiteorcolor">Picture Color</Label>
-            <RadioGroup
-              defaultValue="color"
-              value={mode}
-              onValueChange={setMode}
-              id="black&whiteorcolor"
-            >
-              <div className="flex items-center space-x-2 mt-1.5">
-                <RadioGroupItem value="color" id="color" />
-                <Label htmlFor="color">Color</Label>
-                <RadioGroupItem value="blackandwhite" id="blackandwhite" />
-                <Label htmlFor="blackandwhite">Black&White</Label>
+          <FormField
+            control={form.control}
+            name="dataProcessingReq.contrast"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Contrast</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    placeholder="Contrast"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        {/* Conditionally Rendered Fields */}
+        {watchedColorType === ColorType.COLOR ? (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <FormField
+                control={form.control}
+                name="dataProcessingReq.exposure"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Exposure</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Exposure"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="dataProcessingReq.brightness"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Brightness</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Brightness"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="dataProcessingReq.saturation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Saturation</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Saturation"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <FormField
+                control={form.control}
+                name="dataProcessingReq.luminance"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Luminance</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Luminance"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="dataProcessingReq.hue"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Hue</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Hue"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white cursor-default select-none bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-600">
+                Color Mode Active
               </div>
-            </RadioGroup>
+            </div>
           </div>
-        </div>
-
-        <div className="gap-5 grid grid-cols-3 content-center">
-          <div>
-            <Label htmlFor="fileType">File Type</Label>
-            <Select>
-              <SelectTrigger className="w-[180px]" id="fileType">
-                <SelectValue placeholder="File Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="PNG">PNG</SelectItem>
-                <SelectItem value="JPEG">JPEG</SelectItem>
-                <SelectItem value="RAW">RAW</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label htmlFor="fileQuality">File Quality</Label>
-            <Select>
-              <SelectTrigger className="w-[180px]" id="fileQuality">
-                <SelectValue placeholder="File Quality" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="LOW">LOW</SelectItem>
-                <SelectItem value="FINE">FINE</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label htmlFor="contrast">Contrast</Label>
-            <Input
-              type="number"
-              step="0.01"
-              id="contrast"
-              placeholder="Contrast"
-            />
-          </div>
-        </div>
-        {mode === "color" ? (
-          <CreateSciencePlanDataProcessingColor />
         ) : (
-          <CreateSciencePlanDataProcessingBlackWhite />
+          // Black & White Fields
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <FormField
+                control={form.control}
+                name="dataProcessingReq.exposure" // Still relevant? Include if yes
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Exposure</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Exposure"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="dataProcessingReq.highlight"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Highlight</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Highlight"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="dataProcessingReq.shadows"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Shadows</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Shadows"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <FormField
+                control={form.control}
+                name="dataProcessingReq.whites"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Whites</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Whites"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="dataProcessingReq.blacks"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Blacks</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Blacks"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-black to-white cursor-default select-none">
+                Black & White Mode Active
+              </div>
+            </div>
+          </div>
         )}
-        {confirmCreateSciencePlan()}
-      </div>
-    </main>
-  );
-}
-
-export function CreateSciencePlanDataProcessingBlackWhite() {
-  return (
-    <main>
-      <div className="gap-5 grid grid-cols-3 content-center">
-        <div>
-          <Label htmlFor="exposure">Exposure</Label>
-          <Input
-            type="number"
-            step="0.01"
-            id="exposure"
-            placeholder="Exposure"
-          />
-        </div>
-        <div>
-          <Label htmlFor="highlight">Highlight</Label>
-          <Input
-            type="number"
-            step="0.01"
-            id="highlight"
-            placeholder="Highlight"
-          />
-        </div>
-        <div>
-          <Label htmlFor="saturation">Shadow</Label>
-          <Input type="shadow" step="0.01" id="shadow" placeholder="Shadow" />
-        </div>
-      </div>
-      <div className="mt-2.5 flex gap-5 grid grid-cols-3 content-center">
-        <div>
-          <Label htmlFor="luminance">White</Label>
-          <Input type="number" step="0.01" id="white" placeholder="White" />
-        </div>
-        <div>
-          <Label htmlFor="black">Black</Label>
-          <Input type="number" step="0.01" id="black" placeholder="Black" />
-        </div>
-        <Label className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-black to-white cursor-default select-none">
-          Black&White Mode
-        </Label>
-      </div>
-    </main>
-  );
-}
-
-export function CreateSciencePlanDataProcessingColor() {
-  return (
-    <main>
-      <div className="gap-5 grid grid-cols-3 content-center">
-        <div>
-          <Label htmlFor="exposure">Exposure</Label>
-          <Input
-            type="number"
-            step="0.01"
-            id="exposure"
-            placeholder="Exposure"
-          />
-        </div>
-        <div>
-          <Label htmlFor="brightness">Brightness</Label>
-          <Input
-            type="number"
-            step="0.01"
-            id="contrast"
-            placeholder="Brightness"
-          />
-        </div>
-        <div>
-          <Label htmlFor="saturation">Saturation</Label>
-          <Input
-            type="number"
-            step="0.01"
-            id="saturaion"
-            placeholder="Saturation"
-          />
-        </div>
-      </div>
-      <div className="mt-2.5 gap-5 grid grid-cols-3 content-center">
-        <div>
-          <Label htmlFor="luminance">Luminance</Label>
-          <Input
-            type="number"
-            step="0.01"
-            id="luminance"
-            placeholder="Luminance"
-          />
-        </div>
-        <div>
-          <Label htmlFor="hue">Hue</Label>
-          <Input type="number" step="0.01" id="hue" placeholder="Hue" />
-        </div>
-        <Label className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white cursor-default select-none bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-600">
-          Color Mode
-        </Label>
-      </div>
-    </main>
-  );
-}
-
-function confirmCreateSciencePlan() {
-  return (
-    <main>
-      <div className="mt-2.5">
+        {/* --- Submission Dialog --- */}
+        {/* The trigger button is now just a regular button visually */}
+        {/* The actual submission logic is handled by handleConfirmSubmit */}
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline" className="w-full">
-              Submit
+            {/* This button triggers the dialog but NOT the form submission itself */}
+            <Button variant="outline" className="w-full mt-6">
+              Create Science Plan
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>
-                Are you sure to create a new science plan?
+                Are you sure you want to create this science plan?
               </DialogTitle>
               <DialogDescription className="text-muted-foreground">
-                This action will create a new science plan with status CREATED
-                for waiting for SUBMITTED later.
+                Please review the details before confirming. This action will
+                create a new science plan with status CREATED.
               </DialogDescription>
             </DialogHeader>
-
-            <div className="grid grid-cols-2 gap-8">
-              <DialogClose>
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <DialogClose asChild>
                 <Button variant="outline" className="w-full">
-                  Cancle
+                  Cancel
                 </Button>
               </DialogClose>
-              <Button variant="destructive" className="w-full">
-                Submit
+              {/* This button calls the CONFIRMED submit handler */}
+              <Button
+                variant="default" // Or destructive if preferred
+                className="w-full"
+                onClick={form.handleSubmit(handleConfirmSubmit)} // Validate AGAIN before confirm submit
+                // disabled={mutation.isPending} // Disable if mutation running
+              >
+                {/* {mutation.isPending ? "Submitting..." : "Confirm Submit"} */}
+                Confirm Submit
               </Button>
             </div>
           </DialogContent>
         </Dialog>
-      </div>
-    </main>
+      </form>
+    </Form>
   );
 }
+
+// Remove the separate CreateSciencePlanDataProcessing... components
+// as their fields are now integrated directly above.
+// Keep confirmCreateSciencePlan logic integrated as the Dialog part.
