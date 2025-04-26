@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 @Table(name = "`user`")
 public class User {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int userId;
     private String firstName;
     private String lastName;
@@ -18,13 +18,11 @@ public class User {
     private String password;
     private String role;
 
-    public User()
-    {
+    public User() {
         super();
     }
 
-    public User(String firstName, String lastName, String username, String password, String role)
-    {
+    public User(String firstName, String lastName, String username, String password, String role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -32,24 +30,28 @@ public class User {
         this.role = role;
     }
 
-    public String getUsername()
-    {
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public String getUsername() {
         return this.username;
     }
 
-    public String getPassword()
-    {
+    public String getPassword() {
         return this.password;
     }
 
-    public String getRole()
-    {
+    public String getRole() {
         return this.role;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Name: " + firstName + " " + lastName + ", Username: " + username + "Role: " + role;
     }
 }
