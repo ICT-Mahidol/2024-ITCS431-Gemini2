@@ -208,4 +208,18 @@ public class SciencePlanController {
             }
         }
     }
+    @PutMapping("/test")
+    public @ResponseBody
+    ResponseEntity<Map<String, String>> testEndpoint(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam("planId") String planId) {
+        if (authHeader == null) {
+            return new ResponseEntity<>(Map.of("error", "Authorization header is missing"), HttpStatus.UNAUTHORIZED);
+        }
+        if(planId == null || planId.isEmpty()) {
+            return new ResponseEntity<>(Map.of("error", "Missing/Invalid parameters"), HttpStatus.BAD_REQUEST);
+        }
+        SciencePlan sciencePlan = SciencePlanRepository.find
+        return new ResponseEntity<>(Map.of("message", "Successfully tested science plan"), HttpStatus.OK);
+    }
 }
