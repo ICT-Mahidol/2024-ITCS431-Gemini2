@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { sciencePlanDetailsUI } from "@/components/sciene_plan_details";
 import { SciencePlanDetailsMock } from "@/lib/mock_data";
 import DeleteButton from "@/components/delete_button";
+import SubmitButton from "@/components/submit_button";
 
 
 export const Route = createFileRoute("/scienceplan/$plan_id")({
@@ -32,6 +33,9 @@ function RouteComponent() {
         <div>{sciencePlanDetailsUI(SciencePlanDetailsMock)}</div>
         <DeleteButton id={planId.toString()} onDeleted={() => {
           console.log("Deleted successfully");
+        }} />
+        <SubmitButton id={planId.toString()} onSubmit={() => {
+          console.log("Submitted successfully");
         }} />
       </main>
     );
