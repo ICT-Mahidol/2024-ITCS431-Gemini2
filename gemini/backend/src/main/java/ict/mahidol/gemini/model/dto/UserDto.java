@@ -1,4 +1,4 @@
-package ict.mahidol.gemini.model;
+package ict.mahidol.gemini.model.dto;
 
 public class UserDto {
     private String firstName;

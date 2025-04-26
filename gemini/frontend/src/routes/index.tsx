@@ -8,7 +8,7 @@ export const Route = createFileRoute("/")({
 
 function RouteComponent() {
   return (
-    <main className="flex min-h-screen flex-col md:flex-row w-screen">
+    <main className="flex min-h-screen flex-col md:flex-row w-screen justify-center">
       <div className="flex w-full items-center justify-center p-6 md:w-1/2">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">

@@ -6,12 +6,12 @@ import { SciencePlanDetailsMock } from "@/lib/mock_data";
 import DeleteButton from "@/components/delete_button";
 
 
-export const Route = createFileRoute("/science_plan/$plan_id")({
+export const Route = createFileRoute("/scienceplan/$plan_id")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  // use loader to load data from plan_id
+  // TODO: use loader to load data from plan_id
   const { plan_id } = Route.useParams();
   var planId = parseInt(plan_id);
 

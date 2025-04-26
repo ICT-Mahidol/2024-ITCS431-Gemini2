@@ -24,3 +24,8 @@ export enum ColorType {
   COLOR = "Color",
   BW = "BW",
 }
+
+export enum Role {
+  ASTRONOMER = "astronomer",
+  SCIENCE_OBSERVER = "scienceObserver",
+}
