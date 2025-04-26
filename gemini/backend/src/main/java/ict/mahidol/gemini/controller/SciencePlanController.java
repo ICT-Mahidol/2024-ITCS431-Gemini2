@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 @RequestMapping("/api/v1/scienceplan")
 public class SciencePlanController {
+
     @Autowired
     private SciencePlanRepository sciencePlanRepository;
     @Autowired
@@ -41,7 +42,8 @@ public class SciencePlanController {
 
     @CrossOrigin
     @PostMapping("/create")
-    public @ResponseBody ResponseEntity<Map<String, String>> createSciencePlan(
+    public @ResponseBody
+    ResponseEntity<Map<String, String>> createSciencePlan(
             @RequestBody SciencePlanDto sciencePlan, HttpServletRequest request) {
 
         // Handle missing authorization header
@@ -92,27 +94,29 @@ public class SciencePlanController {
 
         return ResponseEntity.ok(Map.of("message", "Science plan created successfully"));
     }
+
     @CrossOrigin
     @PutMapping("/test")
-    public @ResponseBody ResponseEntity<Map<String, String>> testSciencePlan(
-        HttpServletRequest request,
-        @RequestParam("planId") Integer planId
+    public @ResponseBody
+    ResponseEntity<Map<String, String>> testSciencePlan(
+            HttpServletRequest request,
+            @RequestParam("planId") Integer planId
     ) {
         Claims claims = (Claims) request.getAttribute("claims");
         String role = claims.get("role", String.class);
-        if(role.equals("scienceObserver")){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message","Access denied"));
+        if (role.equals("scienceObserver")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Access denied"));
+        }
+        if (planId == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
         }
         // Science plan not found temp
-        if(false){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","No science plan record with id: " + planId + " found"));
+        if (false) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "No science plan record with id: " + planId + " found"));
         }
-        //sciene plan found temp
-        if(false){
-            //update science plan to tested or idk
-            return ResponseEntity.ok(Map.of("message","successfully tested science plan"));
-        }
-        return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
+        // scienceplan found
+        return ResponseEntity.ok(Map.of("message", "successfully tested science plan"));
+
     }
 
     @CrossOrigin
