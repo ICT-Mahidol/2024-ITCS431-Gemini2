@@ -52,12 +52,8 @@ public class SciencePlanController {
         HttpServletRequest request,
         @RequestParam("planId") int planId
     ) {
-        String authHeader = request.getHeader("Authorization");
         Claims claims = (Claims) request.getAttribute("claims");
         String role = claims.get("role", String.class);
-        if(authHeader == null){
-            return ResponseEntity.badRequest().body(Map.of("message","There's no authorization header attached"));
-        }
         if(role.equals("scienceObserver")){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message","Access denied"));
         }
