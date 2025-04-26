@@ -5,6 +5,7 @@ import { sciencePlanDetailsUI } from "@/components/sciene_plan_details";
 import { SciencePlanDetailsMock } from "@/lib/mock_data";
 import DeleteButton from "@/components/delete_button";
 import SubmitButton from "@/components/submit_button";
+import TestButton from "@/components/test_button";
 
 
 export const Route = createFileRoute("/scienceplan/$plan_id")({
@@ -12,7 +13,6 @@ export const Route = createFileRoute("/scienceplan/$plan_id")({
 });
 
 function RouteComponent() {
-  // TODO: use loader to load data from plan_id
   const { plan_id } = Route.useParams();
   var planId = parseInt(plan_id);
 
@@ -36,6 +36,9 @@ function RouteComponent() {
         }} />
         <SubmitButton id={planId.toString()} onSubmit={() => {
           console.log("Submitted successfully");
+        }} />
+        <TestButton id={planId.toString()} onTest={() => {
+          console.log("Tested successfully");
         }} />
       </main>
     );

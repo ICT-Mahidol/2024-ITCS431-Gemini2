@@ -1,3 +1,3 @@
-export async function testSciencePlan() {
+export async function testSciencePlan(planId: number) {
   // TODO: logic ref doc
 }

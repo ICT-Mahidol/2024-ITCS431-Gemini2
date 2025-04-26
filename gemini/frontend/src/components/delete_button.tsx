@@ -1,3 +1,4 @@
+import { deleteSciencePlan } from "@/api/delete_science_plan";
 import React from "react";
 
 type DeleteButtonProps = {
@@ -8,14 +9,8 @@ type DeleteButtonProps = {
 const DeleteButton: React.FC<DeleteButtonProps> = ({ id, onDeleted }) => {
     const handleDelete = async () => {
         try {
-            const response = await fetch(`/api/science_plan/${id}`, {
-                method: "DELETE",
-            });
-            if (response.ok) {
-                onDeleted?.();
-            } else {
-                console.error("Failed to delete the science plan");
-            }
+            const response = await deleteSciencePlan(Number(id));
+            
         } catch (error) {
             console.error("Error deleting the science plan:", error);
         }
