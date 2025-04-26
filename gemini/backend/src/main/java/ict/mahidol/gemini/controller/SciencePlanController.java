@@ -50,7 +50,7 @@ public class SciencePlanController {
     @PutMapping("/test")
     public @ResponseBody ResponseEntity<Map<String, String>> testSciencePlan(
         HttpServletRequest request,
-        @RequestParam("planId") int planId
+        @RequestParam("planId") Integer planId
     ) {
         Claims claims = (Claims) request.getAttribute("claims");
         String role = claims.get("role", String.class);
