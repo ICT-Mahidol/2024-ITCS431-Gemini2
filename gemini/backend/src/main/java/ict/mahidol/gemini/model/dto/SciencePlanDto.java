@@ -7,7 +7,7 @@ public class SciencePlanDto {
     private String planName;
     private String creator;
     private String submitter;
-    private double funding;
+    private double funding = -1;
     private String objective;
     private String starSystem;
     private Date startDate;
