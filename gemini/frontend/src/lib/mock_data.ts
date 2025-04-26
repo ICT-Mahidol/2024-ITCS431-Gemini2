@@ -12,6 +12,31 @@ export const SciencePlansMock: SciencePlan[] = [
     planName: "Investigation of natural resources on Titan",
     planStatus: PlanStatus.SUBMITTED,
   },
+  {
+    planId: 3,
+    planName: "Capture DEVN picture on the moon.",
+    planStatus: PlanStatus.TESTED,
+  },
+  {
+    planId: 4,
+    planName: "Capture DEVN picture on the moon.",
+    planStatus: PlanStatus.TESTED,
+  },
+  {
+    planId: 5,
+    planName: "Capture alien on the sun.",
+    planStatus: PlanStatus.SUBMITTED,
+  },
+  {
+    planId: 6,
+    planName: "Capture Neil Armstrong on the moon.",
+    planStatus: PlanStatus.CREATED,
+  },
+  {
+    planId: 7,
+    planName: "Fucking stupid dude.",
+    planStatus: PlanStatus.TESTED,
+  },
 ];
 
 export const SciencePlanDetailsMock: SciencePlanDetails = {
