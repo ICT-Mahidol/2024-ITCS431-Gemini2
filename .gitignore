@@ -1,2 +1,6 @@
 .DS_Store
 .qodo
+
+## Database ###
+gemini/backend/util/db/gemini.db.mv.db
+gemini/backend/util/db/gemini.db.trace.db
