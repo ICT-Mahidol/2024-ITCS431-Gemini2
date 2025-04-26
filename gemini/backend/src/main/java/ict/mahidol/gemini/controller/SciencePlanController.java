@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ict.mahidol.gemini.model.DataProcessingRequirement;
@@ -78,7 +78,7 @@ public class SciencePlanController {
         // Create a new SciencePlan object
         SciencePlan newSciencePlan = new SciencePlan(
                 planName, creator, submitter, funding, objective, starSystem, startDate, endDate,
-                telescopeLocation, "pending", dataProcessingRequirement);
+                telescopeLocation, "SAVED", dataProcessingRequirement);
 
         // Save the new science plan to the database
         sciencePlanRepository.save(newSciencePlan);
@@ -88,25 +88,10 @@ public class SciencePlanController {
 
     @CrossOrigin
     @PutMapping("/submit")
-    public ResponseEntity<Map<String, String>> invalidSubmission1() {
-        return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
-    }
-
-    @CrossOrigin
-    @PutMapping("/submit/")
-    public ResponseEntity<Map<String, String>> invalidSubmission2() {
-        return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
-    }
-
-    @CrossOrigin
-    @PutMapping("/submit/{planId}")
-    public ResponseEntity<Map<String, String>> submitSciencePlan(@PathVariable int planId,
-            HttpServletRequest request) {
-
-        // Handle missing authorization header
-        if (request.getHeader("Authorization") == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "There's no authorization header attached"));
-        }
+    public ResponseEntity<Map<String, String>> submitSciencePlan(@RequestParam Integer planId,
+            HttpServletRequest request) {        
+        
+        if(planId == null) return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
 
         // Accessing JWT-authenticated user info
         Claims claims = (Claims) request.getAttribute("claims");
