@@ -132,12 +132,14 @@ public class SciencePlanController {
     }
 
     @CrossOrigin
-    @DeleteMapping("/delete/{planId}")
+    @DeleteMapping("/delete")
     public @ResponseBody ResponseEntity<Map<String, String>> deleteSciencePlanById(
-            @PathVariable("planId") int planId,
+            @RequestParam(value = "planId", required = false) Integer planId,
             HttpServletRequest request) {
                 
-        // Springboot automatically handles planId = null 
+        if (planId == null) {
+            return new ResponseEntity<>(Map.of("message", "Missing required parameter"), HttpStatus.BAD_REQUEST);
+        }
         
         Claims claims = (Claims) request.getAttribute("claims");
         if (claims == null) {
@@ -146,13 +148,11 @@ public class SciencePlanController {
         }
 
         String role = claims.get("role", String.class);
-
         if (role == null || !role.equals("astronomer")) {
             return new ResponseEntity<>(Map.of("message", "Access denied"), HttpStatus.FORBIDDEN);
         }
 
         Optional<SciencePlan> planOptional = sciencePlanRepository.findById(planId);
-
         if (planOptional.isPresent()) {
             sciencePlanRepository.deleteById(planId);
             return new ResponseEntity<>(Map.of("message", "Successfully deleted science plan"), HttpStatus.OK);
