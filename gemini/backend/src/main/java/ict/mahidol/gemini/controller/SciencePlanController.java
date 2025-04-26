@@ -5,9 +5,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -126,5 +129,35 @@ public class SciencePlanController {
         sciencePlanRepository.save(sciencePlan.get());
 
         return ResponseEntity.ok(Map.of("message", "Suceessfully submitted science plan."));
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/delete/{planId}")
+    public @ResponseBody ResponseEntity<Map<String, String>> deleteSciencePlanById(
+            @PathVariable("planId") int planId,
+            HttpServletRequest request) {
+                
+        // Springboot automatically handles planId = null 
+        
+        Claims claims = (Claims) request.getAttribute("claims");
+        if (claims == null) {
+            // This case should ideally be handled by the middleware sending a 400/401, but added as a safeguard.
+            return new ResponseEntity<>(Map.of("message", "Authorization token is missing or invalid"), HttpStatus.UNAUTHORIZED);
+        }
+
+        String role = claims.get("role", String.class);
+
+        if (role == null || !role.equals("astronomer")) {
+            return new ResponseEntity<>(Map.of("message", "Access denied"), HttpStatus.FORBIDDEN);
+        }
+
+        Optional<SciencePlan> planOptional = sciencePlanRepository.findById(planId);
+
+        if (planOptional.isPresent()) {
+            sciencePlanRepository.deleteById(planId);
+            return new ResponseEntity<>(Map.of("message", "Successfully deleted science plan"), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(Map.of("message", "No science plan record with id: " + planId + " found"), HttpStatus.NOT_FOUND);
+        }
     }
 }
