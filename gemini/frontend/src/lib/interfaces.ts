@@ -29,7 +29,7 @@ interface User {
   lastName: string;
 }
 
-interface DataProcessingRequirement {
+export interface DataProcessingRequirement {
   fileType: FileType;
   fileQuality: FileQuality;
   colorType: ColorType;
