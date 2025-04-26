@@ -1,5 +1,4 @@
 .DS_Store
-.qodo
 
 ## Database ###
 gemini/backend/util/db/gemini.db.mv.db
