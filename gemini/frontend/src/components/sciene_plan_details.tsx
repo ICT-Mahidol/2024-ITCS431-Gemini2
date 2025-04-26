@@ -11,7 +11,7 @@ export function sciencePlanDetailsUI(
         <div>Plan Name: {sciencePlan.planName}</div>
         <div>Plan Status: {sciencePlan.planStatus}</div>
         <div>Plan Creator: {sciencePlan.creator.firstName} {sciencePlan.creator.lastName}</div>
-        <div>Funding: {sciencePlan.funding}</div>f
+        <div>Funding: {sciencePlan.funding}</div>
         <div>Objective: {sciencePlan.objective}</div>
         <div>Plan Start Date: {sciencePlan.startDate.toISOString()}</div>
         <div>Plan End Date: {sciencePlan.endDate.toISOString()}</div>
