@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 @Table(name = "`science_plan`")
 public class SciencePlan {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     protected int planId;
     protected String planName;
     protected String creator;
@@ -28,15 +28,13 @@ public class SciencePlan {
     @Embedded
     protected DataProcessingRequirement dataProcessingReq;
 
-    public SciencePlan()
-    {
+    public SciencePlan() {
         super();
     }
 
-    public SciencePlan(int planId, String planName, String creator, String submitter, double funding,
-                       String objective, String starSystem, Date startDate, Date endDate,
-                       String telescopeLocation, String planStatus, DataProcessingRequirement dataProcessingReq) {
-        this.planId = planId;
+    public SciencePlan(String planName, String creator, String submitter, double funding,
+            String objective, String starSystem, Date startDate, Date endDate,
+            String telescopeLocation, String planStatus, DataProcessingRequirement dataProcessingReq) {
         this.planName = planName;
         this.creator = creator;
         this.submitter = submitter;
@@ -94,8 +92,7 @@ public class SciencePlan {
         return planStatus;
     }
 
-    public DataProcessingRequirement getDataProcessingReq()
-    {
+    public DataProcessingRequirement getDataProcessingReq() {
         return dataProcessingReq;
     }
 

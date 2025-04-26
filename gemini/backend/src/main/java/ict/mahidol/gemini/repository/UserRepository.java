@@ -8,4 +8,6 @@ import ict.mahidol.gemini.model.User;
 
 public interface UserRepository extends CrudRepository<User, Integer> {
     Optional<User> findByUsernameAndPassword(String username, String password);
+
+    Optional<User> findByUsername(String username);
 }
