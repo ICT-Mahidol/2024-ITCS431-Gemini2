@@ -6,7 +6,7 @@ import { SciencePlanDetailsMock } from "@/lib/mock_data";
 import DeleteButton from "@/components/delete_button";
 import SubmitButton from "@/components/submit_button";
 import TestButton from "@/components/test_button";
-
+import { PlanStatus } from "@/lib/enums";
 
 export const Route = createFileRoute("/scienceplan/$plan_id")({
   component: RouteComponent,
@@ -14,9 +14,9 @@ export const Route = createFileRoute("/scienceplan/$plan_id")({
 
 function RouteComponent() {
   const { plan_id } = Route.useParams();
-  var planId = parseInt(plan_id);
+  const planId = parseInt(plan_id);
 
-  const {isPending, isError, data, error} = useQuery({
+  const { isPending, isError, data } = useQuery({
     queryKey: ["sciencePlanDetails"],
     queryFn: () => getSciencePlanDetails(planId),
   });
@@ -28,25 +28,31 @@ function RouteComponent() {
     );
   }
   if (isError) {
+    // use mock data if error
     return (
       <main>
         <div>{sciencePlanDetailsUI(SciencePlanDetailsMock)}</div>
-        <DeleteButton id={planId.toString()} onDeleted={() => {
-          console.log("Deleted successfully");
-        }} />
-        <SubmitButton id={planId.toString()} onSubmit={() => {
-          console.log("Submitted successfully");
-        }} />
-        <TestButton id={planId.toString()} onTest={() => {
-          console.log("Tested successfully");
-        }} />
+        <DeleteButton id={planId.toString()} />
+        {SciencePlanDetailsMock.planStatus === PlanStatus.CREATED && (
+          <TestButton id={plan_id} />
+        )}
+        {SciencePlanDetailsMock.planStatus === PlanStatus.TESTED && (
+          <SubmitButton id={plan_id} />
+        )}
       </main>
     );
   }
 
   return (
     <main>
-      {sciencePlanDetailsUI(data)}
+      <div>{sciencePlanDetailsUI(data)}</div>
+      <DeleteButton id={planId.toString()} />
+      {SciencePlanDetailsMock.planStatus === PlanStatus.CREATED && (
+        <TestButton id={planId.toString()} />
+      )}
+      {SciencePlanDetailsMock.planStatus === PlanStatus.TESTED && (
+        <SubmitButton id={planId.toString()} />
+      )}
     </main>
   );
 }
