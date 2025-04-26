@@ -46,6 +46,32 @@ public class SciencePlanController {
 
         return sciencePlanServices.CreateSciencePlan(username, role, sciencePlan);
     }
+    @CrossOrigin
+    @PutMapping("/test")
+    public @ResponseBody ResponseEntity<Map<String, String>> testSciencePlan(
+        HttpServletRequest request,
+        @RequestParam("planId") int planId
+    ) {
+        String authHeader = request.getHeader("Authorization");
+        Claims claims = (Claims) request.getAttribute("claims");
+        String role = claims.get("role", String.class);
+        if(authHeader == null){
+            return ResponseEntity.badRequest().body(Map.of("message","There's no authorization header attached"));
+        }
+        if(role.equals("scienceObserver")){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message","Access denied"));
+        }
+        // Science plan not found temp
+        if(false){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message","No science plan record with id: " + planId + " found"));
+        }
+        //sciene plan found temp
+        if(false){
+            //update science plan to tested or idk
+            return ResponseEntity.ok(Map.of("message","successfully tested science plan"));
+        }
+        return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
+    }
 
     @CrossOrigin
     @PutMapping("/submit")
