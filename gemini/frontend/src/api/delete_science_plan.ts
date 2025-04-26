@@ -1,3 +1,3 @@
-export async function deleteSciencePlan() {
+export async function deleteSciencePlan(planId: number) {
   // TODO: logic ref doc
 }
