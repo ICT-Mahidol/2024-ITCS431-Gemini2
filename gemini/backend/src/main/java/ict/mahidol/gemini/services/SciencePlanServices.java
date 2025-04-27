@@ -143,14 +143,14 @@ public class SciencePlanServices {
         }
     }
 
-    public @ResponseBody ResponseEntity<List<Map<String, Object>>> GetSciencePlanList()
+    public @ResponseBody ResponseEntity<?> GetSciencePlanList()
     {
         List<Map<String, Object>> planList = new ArrayList<>();
 
         Iterable<SciencePlan> plans = sciencePlanRepository.findAll();
 
         if (!plans.iterator().hasNext()) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Map.of("message", "No science plan record(s) found"), HttpStatus.NOT_FOUND);
         }
         else {
             for (SciencePlan plan : plans) {
@@ -164,14 +164,14 @@ public class SciencePlanServices {
         }
     }
 
-    public @ResponseBody ResponseEntity<List<Map<String, Object>>> GetSciencePlanListByStatus(String status)
+    public @ResponseBody ResponseEntity<?> GetSciencePlanListByStatus(String status)
     {
         List<Map<String, Object>> planList = new ArrayList<>();
 
         List<SciencePlan> plans = sciencePlanRepository.findByPlanStatus(status);
 
         if (plans.isEmpty()) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Map.of("message", "No science plan record(s) found"), HttpStatus.NOT_FOUND);
         } else {
             // Build a simple map from your results
             for (SciencePlan plan : plans) {
@@ -183,5 +183,18 @@ public class SciencePlanServices {
             }
             return ResponseEntity.ok(planList);
         }
+    }
+
+    public @ResponseBody ResponseEntity<?> GetSciencePlanDetail(Integer planId)
+    {
+        if (planId == null) {
+            return new ResponseEntity<>(Map.of("message", "Missing required parameter"), HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<SciencePlan> sciencePlan = sciencePlanRepository.findById(planId);
+
+        if(!sciencePlan.isPresent()) return ResponseEntity.status(404).body(Map.of("message", "No science plan record with id: " + planId + " found"));
+
+        return ResponseEntity.ok(sciencePlan.get());
     }
 }

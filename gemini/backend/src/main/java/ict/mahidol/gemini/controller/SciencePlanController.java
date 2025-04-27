@@ -1,6 +1,5 @@
 package ict.mahidol.gemini.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +92,7 @@ public class SciencePlanController {
 
     @CrossOrigin
     @GetMapping("/list")
-    public @ResponseBody ResponseEntity<List<Map<String, Object>>> getSciencePlanList(@RequestParam(value = "status", required = false) String status,
+    public @ResponseBody ResponseEntity<?> getSciencePlanList(@RequestParam(value = "status", required = false) String status,
     HttpServletRequest request) {
         if(status == null || "".equals(status)) return sciencePlanServices.GetSciencePlanList();
         else return sciencePlanServices.GetSciencePlanListByStatus(status);
