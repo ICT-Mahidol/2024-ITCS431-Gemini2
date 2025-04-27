@@ -43,17 +43,6 @@ public class SciencePlanController {
     }
 
     @CrossOrigin
-    @PutMapping("/test")
-    public @ResponseBody
-    ResponseEntity<Map<String, String>> testSciencePlan(@RequestParam(value = "planId", required = false) Integer planId, HttpServletRequest request) 
-    {
-        Claims claims = (Claims) request.getAttribute("claims");
-        String role = claims.get("role", String.class);
-        
-        return sciencePlanServices.TestSciencePlan(role, planId);
-    }
-
-    @CrossOrigin
     @PutMapping("/submit")
     public ResponseEntity<Map<String, String>> submitSciencePlan(@RequestParam(value = "planId", required = false) Integer planId,
             HttpServletRequest request) {        
@@ -64,6 +53,17 @@ public class SciencePlanController {
         String role = claims.get("role", String.class);
 
         return sciencePlanServices.SubmitSciencePlan(username, role, planId);
+    }
+
+    @CrossOrigin
+    @PutMapping("/test")
+    public @ResponseBody
+    ResponseEntity<Map<String, String>> testSciencePlan(@RequestParam(value = "planId", required = false) Integer planId, HttpServletRequest request) 
+    {
+        Claims claims = (Claims) request.getAttribute("claims");
+        String role = claims.get("role", String.class);
+        
+        return sciencePlanServices.TestSciencePlan(role, planId);
     }
 
     @CrossOrigin
