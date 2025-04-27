@@ -165,31 +165,6 @@ public class SciencePlanServices {
         return updateResult ? ResponseEntity.ok(Map.of("message", "successfully validated science plan")) : ResponseEntity.badRequest().body(Map.of("message", "Invalid Science Plan"));
     }
 
-    public @ResponseBody ResponseEntity<Map<String, String>> ValidateSciencePlan(String role, Integer planId)
-    {
-        if (!role.equals("scienceObserver")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Access denied"));
-        }
-
-        if (planId == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
-        }
-
-        Optional<SciencePlan> sciencePlan = sciencePlanRepository.findById(planId);
-
-        if (!sciencePlan.isPresent()) {
-            return ResponseEntity.status(404)
-                    .body(Map.of("message", "No science plan record with id: " + planId + " found"));
-        }
-
-        if(!"TESTED".equals(sciencePlan.get().getPlanStatus())) return ResponseEntity.badRequest().body(Map.of("message", "Unable to validate untested Science Plan/This plan is already validated"));
-
-        sciencePlan.get().setPlanStatus("VALIDATED");
-        sciencePlanRepository.save(sciencePlan.get());
-
-        return ResponseEntity.ok(Map.of("message", "successfully tested science plan"));
-    }
-
     public @ResponseBody ResponseEntity<Map<String, String>> DeleteSciencePlan(String role, Integer planId)
     {
         OCS ocs = new OCS();

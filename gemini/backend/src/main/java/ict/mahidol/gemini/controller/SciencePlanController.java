@@ -78,17 +78,6 @@ public class SciencePlanController {
     }
 
     @CrossOrigin
-    @PutMapping("/validate")
-    public @ResponseBody
-    ResponseEntity<Map<String, String>> validateSciencePlan(@RequestParam(value = "planId", required = false) Integer planId, HttpServletRequest request) 
-    {
-        Claims claims = (Claims) request.getAttribute("claims");
-        String role = claims.get("role", String.class);
-        
-        return sciencePlanServices.ValidateSciencePlan(role, planId);
-    }
-
-    @CrossOrigin
     @DeleteMapping("/delete")
     public @ResponseBody ResponseEntity<Map<String, String>> deleteSciencePlan(
             @RequestParam(value = "planId", required = false) Integer planId,
