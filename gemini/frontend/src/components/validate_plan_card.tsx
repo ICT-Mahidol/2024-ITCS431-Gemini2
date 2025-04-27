@@ -5,6 +5,7 @@ import {
   DeletePlanAction,
   SubmitPlanAction,
   TestPlanAction,
+  ValidatePlanAction,
 } from "./plan_actions"; // Assuming they are in PlanActions.tsx
 
 // Helper function remains the same
@@ -28,20 +29,6 @@ export function ValidateSciencePlanCard({
   planStatus,
 }: Readonly<{ planId: number; planName: string; planStatus: PlanStatus }>) {
   // Determine which action icon/component to show based on status
-  const renderPlanAction = () => {
-    switch (planStatus) {
-      case PlanStatus.SAVED:
-        return <SubmitPlanAction planId={planId} />;
-      case PlanStatus.TESTED:
-        return null;
-      case PlanStatus.SUBMITTED:
-        // No action icon needed for submitted (or add view icon etc.)
-        return <TestPlanAction planId={planId} />;
-      // Add cases for other statuses if they have actions
-      default:
-        return null; // Or some default placeholder/icon
-    }
-  };
 
   return (
     <div className="p-4">
@@ -76,7 +63,7 @@ export function ValidateSciencePlanCard({
           {/* Always show delete action? Adjust logic if needed */}
           <DeletePlanAction planId={planId} />
           {/* Conditionally render the status-specific action */}
-          {renderPlanAction()}
+          <ValidatePlanAction planId={planId} />
         </div>
       </div>
     </div>

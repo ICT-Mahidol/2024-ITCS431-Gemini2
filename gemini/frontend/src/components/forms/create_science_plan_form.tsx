@@ -118,7 +118,18 @@ export function CreateSciencePlanForm() {
               <FormItem>
                 <FormLabel>Telescope Location</FormLabel>
                 <FormControl>
-                  <Input type="text" {...field} />
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-auto">
+                      <SelectValue placeholder="Select Telescope Location" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Hawaii">Hawaii</SelectItem>
+                      <SelectItem value="Chile">Chile</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -550,7 +561,6 @@ export function CreateSciencePlanForm() {
                 onClick={form.handleSubmit(handleConfirmSubmit)} // Validate AGAIN before confirm submit
               >
                 {mutation.isPending ? "Submitting..." : "Confirm Submit"}
-                Confirm Submit
               </Button>
             </div>
           </DialogContent>

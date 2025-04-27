@@ -106,7 +106,7 @@ function RouteComponent() {
               .filter((val) => val.planStatus === "TESTED") // Filter for planStatus="TESTED"
               .map((val) => (
                 // Render component correctly
-                <SciencePlanCard
+                <ValidateSciencePlanCard
                   key={val.planId} // Add key prop
                   planId={val.planId}
                   planName={val.planName}
@@ -115,7 +115,7 @@ function RouteComponent() {
               ))
           ) : (
             <p className="col-span-full text-muted-foreground">
-              No science plans found matching the selected status.
+              No science plans found to be validated.
             </p>
           )}
         </div>
