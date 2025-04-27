@@ -1,6 +1,7 @@
 import { testSciencePlan } from "@/api/test_science_plan";
 import { useMutation } from "@tanstack/react-query";
 import React from "react";
+import { toast } from "sonner";
 
 type TestButtonProps = {
   id: string;
@@ -10,10 +11,10 @@ const TestButton: React.FC<TestButtonProps> = ({ id }) => {
   const mutation = useMutation({
     mutationFn: testSciencePlan,
     onSuccess: () => {
-      console.log("Test successful");
+      toast.success("Science plan tested successfully");
     },
     onError: (error) => {
-      console.error("Error testing science plan:", error);
+      toast.error(`Error testing science plan ${error.message}`);
     },
   });
   const handleTest = () => {
