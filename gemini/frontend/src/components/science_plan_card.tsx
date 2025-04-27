@@ -33,10 +33,10 @@ export function SciencePlanCard({
       case PlanStatus.SAVED:
         return <SubmitPlanAction planId={planId} />;
       case PlanStatus.TESTED:
-        return null;
+        return <TestPlanAction planId={planId} />;
       case PlanStatus.SUBMITTED:
         // No action icon needed for submitted (or add view icon etc.)
-        return <TestPlanAction planId={planId} />;
+        return null;
       // Add cases for other statuses if they have actions
       default:
         return null; // Or some default placeholder/icon

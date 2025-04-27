@@ -1,12 +1,7 @@
 import { PlanStatus } from "@/lib/enums";
 import { Link } from "@tanstack/react-router"; // Import Link for navigation
 // Import action components defined above
-import {
-  DeletePlanAction,
-  SubmitPlanAction,
-  TestPlanAction,
-  ValidatePlanAction,
-} from "./plan_actions"; // Assuming they are in PlanActions.tsx
+import { DeletePlanAction, ValidatePlanAction } from "./plan_actions"; // Assuming they are in PlanActions.tsx
 
 // Helper function remains the same
 function StatusBackgroundColor(status: PlanStatus): string {

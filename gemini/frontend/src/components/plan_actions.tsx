@@ -164,7 +164,7 @@ export function ValidatePlanAction({ planId }: Readonly<{ planId: number }>) {
     <ActionConfirmationDialog
       triggerButton={trigger}
       dialogTitle="Confirm Validate plan"
-      dialogDescription="Are you sure you want to test this science plan? Its status will change to TESTED."
+      dialogDescription="Are you sure you want to test this science plan? Its status will change to VALIDATED."
       confirmAction={() => mutation.mutate()}
       confirmButtonText="Validate"
       confirmButtonVariant="default"

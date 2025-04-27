@@ -1,27 +1,8 @@
 import { getSciencePlans } from "@/api/get_science_plans";
-import { CreateSciencePlanForm } from "@/components/forms/create_science_plan_form";
-import { SciencePlanCard } from "@/components/science_plan_card";
-import { Button } from "@/components/ui/button";
-import { DialogHeader } from "@/components/ui/dialog";
 import { ValidateSciencePlanCard } from "@/components/validate_plan_card";
 import { CookieHelper } from "@/lib/cookie_helper";
 import { PlanStatus, Role } from "@/lib/enums";
 import { SciencePlan } from "@/lib/interfaces";
-import { SciencePlansMock } from "@/lib/mock_data";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from "@radix-ui/react-dialog";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@radix-ui/react-select";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
@@ -45,11 +26,6 @@ export const Route = createFileRoute("/scienceplan/validate/")({
     }
   },
 });
-
-interface DashboardHeaderProps {
-  onStatusChange: (value: PlanStatus | "ALL") => void;
-  currentStatus: PlanStatus | "ALL";
-}
 
 function DashboardHeader() {
   return (
