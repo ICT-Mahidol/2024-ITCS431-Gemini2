@@ -1,6 +1,9 @@
 package ict.mahidol.gemini.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -10,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +28,8 @@ import ict.mahidol.gemini.repository.SciencePlanRepository;
 import ict.mahidol.gemini.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @Controller
 @RequestMapping("/api/v1/scienceplan")
@@ -158,6 +162,50 @@ public class SciencePlanController {
             return new ResponseEntity<>(Map.of("message", "Successfully deleted science plan"), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(Map.of("message", "No science plan record with id: " + planId + " found"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/list")
+    public @ResponseBody ResponseEntity<List<Map<String, Object>>> getSciencePlanList(@RequestParam(value = "status", required = false) String status,
+    HttpServletRequest request) {
+        List<Map<String, Object>> planList = new ArrayList<>();
+
+        if(status == null || "".equals(status))
+        {
+            Iterable<SciencePlan> plans = sciencePlanRepository.findAll();
+
+            if (!plans.iterator().hasNext()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+            }
+            else {
+                for (SciencePlan plan : plans) {
+                    Map<String, Object> planMap = new HashMap<>();
+                    planMap.put("planId", plan.getPlanId());
+                    planMap.put("planName", plan.getPlanName());
+                    planMap.put("planStatus", plan.getPlanStatus());
+                    planList.add(planMap);
+                }
+                return ResponseEntity.ok(planList);
+            }
+        }
+        else
+        {
+            List<SciencePlan> plans = sciencePlanRepository.findByPlanStatus(status);
+
+            if (plans.isEmpty()) {
+                return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+            } else {
+                // Build a simple map from your results
+                for (SciencePlan plan : plans) {
+                    Map<String, Object> planMap = new HashMap<>();
+                    planMap.put("planId", plan.getPlanId());
+                    planMap.put("planName", plan.getPlanName());
+                    planMap.put("planStatus", plan.getPlanStatus());
+                    planList.add(planMap);
+                }
+                return ResponseEntity.ok(planList);
+            }
         }
     }
 }
