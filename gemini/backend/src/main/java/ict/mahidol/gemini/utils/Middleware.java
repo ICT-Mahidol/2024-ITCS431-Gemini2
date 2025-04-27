@@ -34,7 +34,8 @@ public class Middleware extends OncePerRequestFilter {
 
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().write("Invalid JWT Token");
+                response.setContentType("application/json");
+                response.getWriter().write("{\"message\":\"Invalid JWT Token\"}");
                 return;
             }
         }
