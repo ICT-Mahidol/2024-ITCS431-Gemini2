@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,6 +65,17 @@ public class SciencePlanController {
         String role = claims.get("role", String.class);
         
         return sciencePlanServices.TestSciencePlan(role, planId);
+    }
+
+    @CrossOrigin
+    @PutMapping("/validate")
+    public @ResponseBody
+    ResponseEntity<Map<String, String>> validateSciencePlan(@RequestParam(value = "planId", required = false) Integer planId, HttpServletRequest request) 
+    {
+        Claims claims = (Claims) request.getAttribute("claims");
+        String role = claims.get("role", String.class);
+        
+        return sciencePlanServices.ValidateSciencePlan(role, planId);
     }
 
     @CrossOrigin
