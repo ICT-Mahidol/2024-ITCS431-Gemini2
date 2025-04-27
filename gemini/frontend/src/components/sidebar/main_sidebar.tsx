@@ -21,7 +21,9 @@ export function MainSidebar({
   role: string;
 }>) {
   const router = useRouterState();
-  const isSciencePlan = router.location.pathname === "/scienceplan";
+  const isSciencePlan =
+    router.location.pathname === "/scienceplan" ||
+    /^\/scienceplan\/\d+$/.test(router.location.pathname);
   const isValidatePlan = router.location.pathname === "/scienceplan/validate";
   const isScienceObserver = role === Role.SCIENCE_OBSERVER;
 

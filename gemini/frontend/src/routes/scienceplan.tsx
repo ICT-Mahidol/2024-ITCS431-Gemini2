@@ -6,6 +6,7 @@ import { Payload } from "@/lib/interfaces";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/scienceplan")({
+  pendingComponent: () => <div>Loading...</div>,
   component: RouteComponent,
   // REF: https://tanstack.com/router/latest/docs/framework/react/guide/authenticated-routes
   beforeLoad: async ({ location }) => {

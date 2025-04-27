@@ -30,11 +30,21 @@ import { createSciencePlanSchema } from "./schemas";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColorType, FileQuality, FileType } from "@/lib/enums";
-// import { useMutation } from "@tanstack/react-query"; // If submitting via RQ
+import { createSciencePlan } from "@/api/create_science_plan";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 // import { createSciencePlan } from "@/api/create_science_plan"; // Import your API function
 
 export function CreateSciencePlanForm() {
-  // const mutation = useMutation({ mutationFn: createSciencePlan, ... }); // Setup mutation if needed
+  const mutation = useMutation({
+    mutationFn: createSciencePlan,
+    onSuccess: () => {
+      toast.success("Science plan created successfully!");
+    },
+    onError: (error) => {
+      toast.error(`Error creating science plan. ${error}`);
+    },
+  }); // Setup mutation if needed
 
   const form = useForm<z.infer<typeof createSciencePlanSchema>>({
     resolver: zodResolver(createSciencePlanSchema),
@@ -75,8 +85,8 @@ export function CreateSciencePlanForm() {
   // Handle the actual submission *after* confirmation in the dialog
   const handleConfirmSubmit = () => {
     const currentValues = form.getValues(); // Get current form values
-    console.log("Confirmed Submit:", currentValues);
-    // mutation.mutate(currentValues); // Call mutation with current values
+    // console.log("Confirmed Submit:", currentValues);
+    mutation.mutate(currentValues); // Call mutation with current values
   };
 
   return (

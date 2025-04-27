@@ -1,5 +1,14 @@
 import { ColorType, FileQuality, FileType, PlanStatus, Role } from "./enums";
 
+export interface BaseResponse {
+  message: string;
+}
+
+export interface LoginResponse {
+  message: string;
+  token: string;
+}
+
 export interface Payload {
   userName: string;
   role: Role;
