@@ -22,7 +22,7 @@ function StatusBackgroundColor(status: PlanStatus): string {
   }
 }
 
-export function SciencePlanCard({
+export function ValidateSciencePlanCard({
   planId,
   planName,
   planStatus,
