@@ -48,34 +48,6 @@ public class SciencePlanController {
     }
 
     @CrossOrigin
-    @PutMapping("/test")
-    public @ResponseBody
-    ResponseEntity<Map<String, String>> testSciencePlan(@RequestParam("planId") Integer planId, HttpServletRequest request) 
-    {
-        Claims claims = (Claims) request.getAttribute("claims");
-        String role = claims.get("role", String.class);
-        if (role.equals("scienceObserver")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Access denied"));
-        }
-
-        if (planId == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
-        }
-
-        Optional<SciencePlan> sciencePlan = sciencePlanRepository.findById(planId);
-
-        if (!sciencePlan.isPresent()) {
-            return ResponseEntity.status(404)
-                    .body(Map.of("message", "No science plan record with id: " + planId + " found"));
-        }
-
-        sciencePlan.get().setPlanStatus("TESTED");
-        sciencePlanRepository.save(sciencePlan.get());
-
-        return ResponseEntity.ok(Map.of("message", "successfully tested science plan"));
-    }
-
-    @CrossOrigin
     @PutMapping("/submit")
     public ResponseEntity<Map<String, String>> submitSciencePlan(@RequestParam(value = "planId", required = false) Integer planId,
             HttpServletRequest request) {        
@@ -97,6 +69,34 @@ public class SciencePlanController {
         String role = claims.get("role", String.class);
         
         return sciencePlanServices.TestSciencePlan(role, planId);
+    }
+
+    @CrossOrigin
+    @PutMapping("/test")
+    public @ResponseBody
+    ResponseEntity<Map<String, String>> testSciencePlan(@RequestParam("planId") Integer planId, HttpServletRequest request) 
+    {
+        Claims claims = (Claims) request.getAttribute("claims");
+        String role = claims.get("role", String.class);
+        if (!role.equals("astronomer")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Access denied"));
+        }
+
+        if (planId == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
+        }
+
+        Optional<SciencePlan> sciencePlan = sciencePlanRepository.findById(planId);
+
+        if (!sciencePlan.isPresent()) {
+            return ResponseEntity.status(404)
+                    .body(Map.of("message", "No science plan record with id: " + planId + " found"));
+        }
+
+        sciencePlan.get().setPlanStatus("TESTED");
+        sciencePlanRepository.save(sciencePlan.get());
+
+        return ResponseEntity.ok(Map.of("message", "successfully tested science plan"));
     }
 
     @CrossOrigin
