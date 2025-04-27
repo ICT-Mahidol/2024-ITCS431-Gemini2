@@ -1,5 +1,6 @@
 import { deleteSciencePlan } from "@/api/delete_science_plan";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import React from "react";
 import { toast } from "sonner";
 
@@ -8,6 +9,7 @@ type DeleteButtonProps = {
 };
 
 const DeleteButton: React.FC<DeleteButtonProps> = ({ id }) => {
+  const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: deleteSciencePlan,
     onSuccess: () => {
@@ -19,6 +21,9 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({ id }) => {
   });
   const handleDelete = async () => {
     mutation.mutate(Number(id));
+    navigate({
+      to: "/scienceplan",
+    });
   };
 
   return (

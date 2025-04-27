@@ -5,7 +5,7 @@ export const SciencePlansMock: SciencePlan[] = [
   {
     planId: 1,
     planName: "Study of livability on Mars",
-    planStatus: PlanStatus.CREATED,
+    planStatus: PlanStatus.SAVED,
   },
   {
     planId: 2,
@@ -30,7 +30,7 @@ export const SciencePlansMock: SciencePlan[] = [
   {
     planId: 6,
     planName: "Capture Neil Armstrong on the moon.",
-    planStatus: PlanStatus.CREATED,
+    planStatus: PlanStatus.SAVED,
   },
   {
     planId: 7,
@@ -52,7 +52,7 @@ export const SciencePlanDetailsMock: SciencePlanDetails = {
     "The objective of this project is to explore the feasibility of sustaining human life on Mars by analyzing environmental, biological, and technological factors. It aims to assess key challenges such as atmospheric conditions, resource availability, and habitat design. The study will also evaluate potential solutions for long-term human habitation and survival on the Martian surface.",
   startDate: new Date("2025-04-23"),
   endDate: new Date("2025-04-29"),
-  planStatus: PlanStatus.CREATED,
+  planStatus: PlanStatus.SAVED,
   dataProcessingReq: {
     fileType: FileType.RAW,
     fileQuality: FileQuality.FINE,

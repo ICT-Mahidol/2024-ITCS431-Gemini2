@@ -12,7 +12,7 @@ import { ActionConfirmationDialog } from "@/components/action_confirmation_dialo
 import { toast } from "sonner"; // Import toast for notifications
 
 // --- Delete Action ---
-export function DeletePlanAction({ planId }: { planId: number }) {
+export function DeletePlanAction({ planId }: Readonly<{ planId: number }>) {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: () => deleteSciencePlan(planId), // Pass planId correctly if API expects it
@@ -51,7 +51,7 @@ export function DeletePlanAction({ planId }: { planId: number }) {
 }
 
 // --- Submit Action ---
-export function SubmitPlanAction({ planId }: { planId: number }) {
+export function SubmitPlanAction({ planId }: Readonly<{ planId: number }>) {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: () => submitSciencePlan(planId),

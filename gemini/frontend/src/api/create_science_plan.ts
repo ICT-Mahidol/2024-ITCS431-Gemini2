@@ -7,9 +7,8 @@ export async function createSciencePlan(
   values: z.infer<typeof createSciencePlanSchema>
 ): Promise<BaseResponse> {
   const authCookie = new CookieHelper(import.meta.env.VITE_AUTH_COOKIE);
-  const apiUrl = import.meta.env.VITE_API_URL;
 
-  const res = await fetch(apiUrl + "/scienceplan/create", {
+  const res = await fetch("/api/scienceplan/create", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${authCookie.token}`,

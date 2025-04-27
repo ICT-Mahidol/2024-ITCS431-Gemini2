@@ -5,11 +5,9 @@ import { z } from "zod";
 export async function login(
   values: z.infer<typeof loginSchema>
 ): Promise<LoginResponse> {
-  const apiUrl = import.meta.env.VITE_API_URL;
-
   console.log(values);
 
-  const res = await fetch(apiUrl + "/user/auth", {
+  const res = await fetch("/api/user/auth", {
     method: "POST",
     headers: {
       "Content-type": "application/json",

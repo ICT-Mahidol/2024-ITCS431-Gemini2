@@ -150,7 +150,7 @@ function DashboardHeader({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="ALL">ALL</SelectItem>
-            <SelectItem value={PlanStatus.CREATED}>CREATED</SelectItem>
+            <SelectItem value={PlanStatus.SAVED}>SAVED</SelectItem>
             <SelectItem value={PlanStatus.TESTED}>TESTED</SelectItem>
             <SelectItem value={PlanStatus.SUBMITTED}>SUBMITTED</SelectItem>
           </SelectContent>
