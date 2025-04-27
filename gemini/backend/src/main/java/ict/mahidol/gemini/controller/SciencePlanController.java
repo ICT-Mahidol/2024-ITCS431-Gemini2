@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +23,6 @@ import ict.mahidol.gemini.model.dto.SciencePlanDto;
 import ict.mahidol.gemini.services.SciencePlanServices;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.GetMapping;
 
 
 
@@ -50,25 +50,29 @@ public class SciencePlanController {
     @CrossOrigin
     @PutMapping("/test")
     public @ResponseBody
-    ResponseEntity<Map<String, String>> testSciencePlan(
-            HttpServletRequest request,
-            @RequestParam("planId") Integer planId
-    ) {
+    ResponseEntity<Map<String, String>> testSciencePlan(@RequestParam("planId") Integer planId, HttpServletRequest request) 
+    {
         Claims claims = (Claims) request.getAttribute("claims");
         String role = claims.get("role", String.class);
         if (role.equals("scienceObserver")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Access denied"));
         }
+
         if (planId == null) {
             return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
         }
-        // Science plan not found temp
-        if (false) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "No science plan record with id: " + planId + " found"));
-        }
-        // scienceplan found
-        return ResponseEntity.ok(Map.of("message", "successfully tested science plan"));
 
+        Optional<SciencePlan> sciencePlan = sciencePlanRepository.findById(planId);
+
+        if (!sciencePlan.isPresent()) {
+            return ResponseEntity.status(404)
+                    .body(Map.of("message", "No science plan record with id: " + planId + " found"));
+        }
+
+        sciencePlan.get().setPlanStatus("TESTED");
+        sciencePlanRepository.save(sciencePlan.get());
+
+        return ResponseEntity.ok(Map.of("message", "successfully tested science plan"));
     }
 
     @CrossOrigin
@@ -157,19 +161,5 @@ public class SciencePlanController {
                 return ResponseEntity.ok(planList);
             }
         }
-    }
-    @PutMapping("/test")
-    public @ResponseBody
-    ResponseEntity<Map<String, String>> testEndpoint(
-            @RequestHeader("Authorization") String authHeader,
-            @RequestParam("planId") String planId) {
-        if (authHeader == null) {
-            return new ResponseEntity<>(Map.of("error", "Authorization header is missing"), HttpStatus.UNAUTHORIZED);
-        }
-        if(planId == null || planId.isEmpty()) {
-            return new ResponseEntity<>(Map.of("error", "Missing/Invalid parameters"), HttpStatus.BAD_REQUEST);
-        }
-        SciencePlan sciencePlan = SciencePlanRepository.find
-        return new ResponseEntity<>(Map.of("message", "Successfully tested science plan"), HttpStatus.OK);
     }
 }
