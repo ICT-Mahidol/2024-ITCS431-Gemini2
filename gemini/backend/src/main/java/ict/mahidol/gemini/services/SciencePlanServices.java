@@ -13,37 +13,49 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ict.mahidol.gemini.model.DataProcessingRequirement;
-import ict.mahidol.gemini.model.SciencePlan;
+import edu.gemini.app.ocs.OCS;
+import edu.gemini.app.ocs.model.DataProcRequirement;
+import edu.gemini.app.ocs.model.SciencePlan;
+import edu.gemini.app.ocs.model.StarSystem;
 import ict.mahidol.gemini.model.User;
+import ict.mahidol.gemini.model.dto.DataProcessingRequirementDto;
 import ict.mahidol.gemini.model.dto.SciencePlanDto;
-import ict.mahidol.gemini.repository.SciencePlanRepository;
 import ict.mahidol.gemini.repository.UserRepository;
 
 @Service
 public class SciencePlanServices {
 
     @Autowired
-    private SciencePlanRepository sciencePlanRepository;
-    @Autowired
     private UserRepository userRepository;
     
     public @ResponseBody ResponseEntity<Map<String, String>> CreateSciencePlan(String username, String role, SciencePlanDto sciencePlan)
     {
-        String planName = sciencePlan.getPlanName();
+        OCS ocs = new OCS();
         Double funding = sciencePlan.getFunding();
         String objective = sciencePlan.getObjective();
         String starSystem = sciencePlan.getStarSystem();
         Date startDate = sciencePlan.getStartDate();
         Date endDate = sciencePlan.getEndDate();
         String telescopeLocation = sciencePlan.getTelescopeLocation();
-        DataProcessingRequirement dataProcessingRequirement = sciencePlan.getDataProcessingReq();
+
+        DataProcessingRequirementDto dataProcessingRequirement = sciencePlan.getDataProcessingReq();
+        String fileType = dataProcessingRequirement.getFileType();
+        String fileQuality = dataProcessingRequirement.getFileQuality();
+        String colorType = dataProcessingRequirement.getColorType();
+        double contrast = dataProcessingRequirement.getContrast();
+        double brightness = dataProcessingRequirement.getBrightness();
+        double highlight = dataProcessingRequirement.getHighlight();
+        double exposure = dataProcessingRequirement.getExposure();
+        double whites = dataProcessingRequirement.getWhites();
+        double blacks = dataProcessingRequirement.getBlacks();
+        double luminance = dataProcessingRequirement.getLuminance();
+        double hue = dataProcessingRequirement.getHue();
 
         if (!role.equals("astronomer")) {
             return ResponseEntity.status(403).body(Map.of("message", "Access denied"));
         }
 
-        if (planName == null || funding == null || funding == -1 || objective == null || starSystem == null
+        if (funding == null || funding == -1 || objective == null || starSystem == null
                 || startDate == null
                 || endDate == null || telescopeLocation == null || dataProcessingRequirement == null) {
             return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
@@ -57,18 +69,45 @@ public class SciencePlanServices {
         String submitter = "";
 
         // Create a new SciencePlan object
-        SciencePlan newSciencePlan = new SciencePlan(
-                planName, creator, submitter, funding, objective, starSystem, startDate, endDate,
-                telescopeLocation, "SAVED", dataProcessingRequirement);
+        SciencePlan newSciencePlan = new SciencePlan(creator, submitter, funding, objective, StarSystem.CONSTELLATIONS.valueOf(starSystem), 
+        startDate, endDate, SciencePlan.TELESCOPELOC.valueOf(telescopeLocation), 
+        new DataProcRequirement(fileType, fileQuality, colorType, contrast, brightness, brightness, highlight, exposure, exposure, whites, blacks, luminance, hue));
 
-        // Save the new science plan to the database
-        sciencePlanRepository.save(newSciencePlan);
+        String response = ocs.createSciencePlan(newSciencePlan);
 
-        return ResponseEntity.ok(Map.of("message", "Science plan created successfully"));
+        return ResponseEntity.ok(Map.of("message", response));
+    }
+
+    public @ResponseBody ResponseEntity<Map<String, String>> TestSciencePlan(String role, Integer planId)
+    {
+        OCS ocs = new OCS();
+        if (!role.equals("astronomer")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Access denied"));
+        }
+
+        if (planId == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
+        }
+
+        SciencePlan sciencePlan = ocs.getSciencePlanByNo(planId);
+
+        // Handle science plan not found
+        if (sciencePlan == null) {
+            return ResponseEntity.status(404)
+                    .body(Map.of("message", "No science plan record with id: " + planId + " found"));
+        }
+
+        if(!SciencePlan.STATUS.SAVED.equals(sciencePlan.getStatus())) return ResponseEntity.badRequest().body(Map.of("message", "This Science Plan is already tested"));
+
+        String response = ocs.testSciencePlan(sciencePlan);
+        boolean updateResult = ocs.updateSciencePlanStatus(planId, SciencePlan.STATUS.TESTED);
+
+        return updateResult ? ResponseEntity.ok(Map.of("message", response)) : ResponseEntity.badRequest().body(Map.of("message", response));
     }
 
     public ResponseEntity<Map<String, String>> SubmitSciencePlan(String username, String role, Integer planId)
     {
+        OCS ocs = new OCS();
         // Handle unauthorized access
         if (!role.equals("astronomer")) {
             return ResponseEntity.status(403).body(Map.of("message", "Access denied"));
@@ -83,53 +122,25 @@ public class SciencePlanServices {
         String submitter = firstName + " " + lastName;
 
         // Find the science plan by ID
-        Optional<SciencePlan> sciencePlan = sciencePlanRepository.findById(planId);
+        SciencePlan sciencePlan = ocs.getSciencePlanByNo(planId);
 
         // Handle science plan not found
-        if (!sciencePlan.isPresent()) {
+        if (sciencePlan == null) {
             return ResponseEntity.status(404)
                     .body(Map.of("message", "No science plan record with id: " + planId + " found"));
         }
 
-        if(!"SAVED".equals(sciencePlan.get().getPlanStatus())) return ResponseEntity.badRequest().body(Map.of("message", "This plan is already submitted"));
+        if(!SciencePlan.STATUS.TESTED.equals(sciencePlan.getStatus())) return ResponseEntity.badRequest().body(Map.of("message", "Unable to submit untested science plan/This plan is already submitted"));
 
-        // Update the science plan status and submitter
-        sciencePlan.get().setPlanStatus("SUBMITTED");
-        sciencePlan.get().setSubmitter(submitter);
+        sciencePlan.setSubmitter(submitter);
+        String response = ocs.submitSciencePlan(sciencePlan);
 
-        // Save the updated science plan to the database
-        sciencePlanRepository.save(sciencePlan.get());
-
-        return ResponseEntity.ok(Map.of("message", "Suceessfully submitted science plan."));
-    }
-
-    public @ResponseBody ResponseEntity<Map<String, String>> TestSciencePlan(String role, Integer planId)
-    {
-        if (!role.equals("astronomer")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Access denied"));
-        }
-
-        if (planId == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
-        }
-
-        Optional<SciencePlan> sciencePlan = sciencePlanRepository.findById(planId);
-
-        if (!sciencePlan.isPresent()) {
-            return ResponseEntity.status(404)
-                    .body(Map.of("message", "No science plan record with id: " + planId + " found"));
-        }
-
-        if(!"SUBMITTED".equals(sciencePlan.get().getPlanStatus())) return ResponseEntity.badRequest().body(Map.of("message", "Unable to test unsubmitted Science Plan/This plan is already tested"));
-
-        sciencePlan.get().setPlanStatus("TESTED");
-        sciencePlanRepository.save(sciencePlan.get());
-
-        return ResponseEntity.ok(Map.of("message", "successfully tested science plan"));
+        return ResponseEntity.ok(Map.of("message", response));
     }
 
     public @ResponseBody ResponseEntity<Map<String, String>> ValidateSciencePlan(String role, Integer planId)
     {
+        OCS ocs = new OCS();
         if (!role.equals("scienceObserver")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Access denied"));
         }
@@ -138,19 +149,20 @@ public class SciencePlanServices {
             return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
         }
 
-        Optional<SciencePlan> sciencePlan = sciencePlanRepository.findById(planId);
+        SciencePlan sciencePlan = ocs.getSciencePlanByNo(planId);
 
-        if (!sciencePlan.isPresent()) {
+        // Handle science plan not found
+        if (sciencePlan == null) {
             return ResponseEntity.status(404)
                     .body(Map.of("message", "No science plan record with id: " + planId + " found"));
         }
 
-        if(!"TESTED".equals(sciencePlan.get().getPlanStatus())) return ResponseEntity.badRequest().body(Map.of("message", "Unable to validate untested Science Plan/This plan is already validated"));
+        // Validate logics
+        if(!SciencePlan.STATUS.SUBMITTED.equals(sciencePlan.getStatus())) return ResponseEntity.badRequest().body(Map.of("message", "Science Plan must be submitted before validation"));
+        
+        boolean updateResult = ocs.updateSciencePlanStatus(planId, SciencePlan.STATUS.VALIDATED);
 
-        sciencePlan.get().setPlanStatus("VALIDATED");
-        sciencePlanRepository.save(sciencePlan.get());
-
-        return ResponseEntity.ok(Map.of("message", "successfully tested science plan"));
+        return updateResult ? ResponseEntity.ok(Map.of("message", "successfully validated science plan")) : ResponseEntity.badRequest().body(Map.of("message", "Invalid Science Plan"));
     }
 
     public @ResponseBody ResponseEntity<Map<String, String>> ValidateSciencePlan(String role, Integer planId)
@@ -180,6 +192,7 @@ public class SciencePlanServices {
 
     public @ResponseBody ResponseEntity<Map<String, String>> DeleteSciencePlan(String role, Integer planId)
     {
+        OCS ocs = new OCS();
         if (role == null || !role.equals("astronomer")) {
             return new ResponseEntity<>(Map.of("message", "Access denied"), HttpStatus.FORBIDDEN);
         }
@@ -188,10 +201,11 @@ public class SciencePlanServices {
             return new ResponseEntity<>(Map.of("message", "Missing required parameter"), HttpStatus.BAD_REQUEST);
         }
 
-        Optional<SciencePlan> planOptional = sciencePlanRepository.findById(planId);
-        if (planOptional.isPresent()) {
-            sciencePlanRepository.deleteById(planId);
-            return new ResponseEntity<>(Map.of("message", "Successfully deleted science plan"), HttpStatus.OK);
+        SciencePlan sciencePlan = ocs.getSciencePlanByNo(planId);
+        if (sciencePlan != null) {
+            boolean deleteResult = ocs.deleteSciencePlanByNo(planId);
+            return deleteResult ? new ResponseEntity<>(Map.of("message", "Successfully deleted science plan"), HttpStatus.OK):
+            ResponseEntity.badRequest().body(Map.of("message", "Unable to delete science plan"));
         } else {
             return new ResponseEntity<>(Map.of("message", "No science plan record with id: " + planId + " found"), HttpStatus.NOT_FOUND);
         }
@@ -199,19 +213,19 @@ public class SciencePlanServices {
 
     public @ResponseBody ResponseEntity<?> GetSciencePlanList()
     {
+        OCS ocs = new OCS();
         List<Map<String, Object>> planList = new ArrayList<>();
 
-        Iterable<SciencePlan> plans = sciencePlanRepository.findAll();
+        List<SciencePlan> plans = ocs.getAllSciencePlans();
 
-        if (!plans.iterator().hasNext()) {
+        if (plans.isEmpty()) {
             return new ResponseEntity<>(Map.of("message", "No science plan record(s) found"), HttpStatus.NOT_FOUND);
         }
         else {
             for (SciencePlan plan : plans) {
                 Map<String, Object> planMap = new HashMap<>();
-                planMap.put("planId", plan.getPlanId());
-                planMap.put("planName", plan.getPlanName());
-                planMap.put("planStatus", plan.getPlanStatus());
+                planMap.put("planId", plan.getPlanNo());
+                planMap.put("planStatus", plan.getStatus());
                 planList.add(planMap);
             }
             return ResponseEntity.ok(planList);
@@ -220,20 +234,23 @@ public class SciencePlanServices {
 
     public @ResponseBody ResponseEntity<?> GetSciencePlanListByStatus(String status)
     {
+        OCS ocs = new OCS();
         List<Map<String, Object>> planList = new ArrayList<>();
 
-        List<SciencePlan> plans = sciencePlanRepository.findByPlanStatus(status);
+        List<SciencePlan> plans = ocs.getAllSciencePlans();
 
         if (plans.isEmpty()) {
             return new ResponseEntity<>(Map.of("message", "No science plan record(s) found"), HttpStatus.NOT_FOUND);
         } else {
             // Build a simple map from your results
             for (SciencePlan plan : plans) {
-                Map<String, Object> planMap = new HashMap<>();
-                planMap.put("planId", plan.getPlanId());
-                planMap.put("planName", plan.getPlanName());
-                planMap.put("planStatus", plan.getPlanStatus());
-                planList.add(planMap);
+                if(SciencePlan.STATUS.valueOf(status).equals(plan.getStatus()))
+                {
+                    Map<String, Object> planMap = new HashMap<>();
+                    planMap.put("planId", plan.getPlanNo());
+                    planMap.put("planStatus", plan.getStatus());
+                    planList.add(planMap);
+                }
             }
             return ResponseEntity.ok(planList);
         }
@@ -241,14 +258,15 @@ public class SciencePlanServices {
 
     public @ResponseBody ResponseEntity<?> GetSciencePlanDetail(Integer planId)
     {
+        OCS ocs = new OCS();
         if (planId == null) {
             return new ResponseEntity<>(Map.of("message", "Missing required parameter"), HttpStatus.BAD_REQUEST);
         }
 
-        Optional<SciencePlan> sciencePlan = sciencePlanRepository.findById(planId);
+        SciencePlan sciencePlan = ocs.getSciencePlanByNo(planId);
 
-        if(!sciencePlan.isPresent()) return ResponseEntity.status(404).body(Map.of("message", "No science plan record with id: " + planId + " found"));
+        if(sciencePlan == null) return ResponseEntity.status(404).body(Map.of("message", "No science plan record with id: " + planId + " found"));
 
-        return ResponseEntity.ok(sciencePlan.get());
+        return ResponseEntity.ok(sciencePlan);
     }
 }
