@@ -1,11 +1,6 @@
-package ict.mahidol.gemini.model;
+package ict.mahidol.gemini.model.dto;
 
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Table;
-
-@Embeddable
-@Table(name = "`data_processing_requirement`")
-public class DataProcessingRequirement {
+public class DataProcessingRequirementDto {
     protected int dataProcessReqId;
     protected String fileType;
     protected String fileQuality;
@@ -21,12 +16,12 @@ public class DataProcessingRequirement {
     protected double luminance;
     protected double hue;
 
-    public DataProcessingRequirement()
+    public DataProcessingRequirementDto()
     {
         super();
     }
 
-    public DataProcessingRequirement(String fileType, String fileQuality, String colorType,
+    public DataProcessingRequirementDto(String fileType, String fileQuality, String colorType,
                                      double contrast, double brightness, double saturation,
                                      double highlight, double exposure, double shadows,
                                      double whites, double blacks, double luminance, double hue) {
