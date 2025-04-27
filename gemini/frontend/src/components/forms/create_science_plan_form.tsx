@@ -30,20 +30,31 @@ import { createSciencePlanSchema } from "./schemas";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColorType, FileQuality, FileType } from "@/lib/enums";
-// import { useMutation } from "@tanstack/react-query"; // If submitting via RQ
-// import { createSciencePlan } from "@/api/create_science_plan"; // Import your API function
+import { createSciencePlan } from "@/api/create_science_plan";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export function CreateSciencePlanForm() {
-  // const mutation = useMutation({ mutationFn: createSciencePlan, ... }); // Setup mutation if needed
+  const mutation = useMutation({
+    mutationFn: createSciencePlan,
+    onSuccess: () => {
+      toast.success("Science plan created successfully!");
+    },
+    onError: (error) => {
+      toast.error(`Error creating science plan. ${error}`);
+    },
+  }); // Setup mutation if needed
 
   const form = useForm<z.infer<typeof createSciencePlanSchema>>({
     resolver: zodResolver(createSciencePlanSchema),
     defaultValues: {
       planName: "",
       funding: 0,
+      starSystem: "",
       objective: "",
       startDate: "", // Default empty string for date inputs
       endDate: "",
+      telescopeLocation: "",
       dataProcessingReq: {
         fileType: FileType.JPEG,
         fileQuality: FileQuality.FINE,
@@ -75,8 +86,9 @@ export function CreateSciencePlanForm() {
   // Handle the actual submission *after* confirmation in the dialog
   const handleConfirmSubmit = () => {
     const currentValues = form.getValues(); // Get current form values
-    console.log("Confirmed Submit:", currentValues);
-    // mutation.mutate(currentValues); // Call mutation with current values
+    // console.log("Confirmed Submit:", currentValues);
+    mutation.mutate(currentValues); // Call mutation with current values
+    form.reset();
   };
 
   return (
@@ -85,52 +97,67 @@ export function CreateSciencePlanForm() {
       {/* form.handleSubmit wraps your onSubmit and performs validation */}
       {/* We will trigger submission from the Dialog's confirm button */}
       <form onSubmit={(e) => e.preventDefault} className="space-y-4">
-        {" "}
-        {/* Prevent default form submission */}
-        <FormField
-          control={form.control}
-          name="planName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Plan Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter Plan Name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="objective"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Objective</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter Objective" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="funding"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Funding</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  step="0.01"
-                  placeholder="Enter Funding Amount"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="planName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Plan Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Plan Name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="telescopeLocation"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Telescope Location</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="funding"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Funding</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    placeholder="Enter Funding Amount"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="starSystem"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Star System</FormLabel>
+                <FormControl>
+                  <Input type="text" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormField
             control={form.control}
@@ -159,6 +186,20 @@ export function CreateSciencePlanForm() {
             )}
           />
         </div>
+        <FormField
+          control={form.control}
+          name="objective"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Objective</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter Objective" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         {/* --- Data Processing Section --- */}
         <h3 className="text-lg font-medium border-t pt-4 mt-4">
           Data Processing Requirements
@@ -369,7 +410,7 @@ export function CreateSciencePlanForm() {
                   </FormItem>
                 )}
               />
-              <div className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white cursor-default select-none bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-600">
+              <div className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white cursor-default select-none bg-gradient-to-r from-red-500 via-yellow-500 to-purple-600">
                 Color Mode Active
               </div>
             </div>
@@ -507,9 +548,8 @@ export function CreateSciencePlanForm() {
                 variant="default" // Or destructive if preferred
                 className="w-full"
                 onClick={form.handleSubmit(handleConfirmSubmit)} // Validate AGAIN before confirm submit
-                // disabled={mutation.isPending} // Disable if mutation running
               >
-                {/* {mutation.isPending ? "Submitting..." : "Confirm Submit"} */}
+                {mutation.isPending ? "Submitting..." : "Confirm Submit"}
                 Confirm Submit
               </Button>
             </div>

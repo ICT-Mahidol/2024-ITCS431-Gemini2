@@ -23,14 +23,14 @@ export class CookieHelper {
    * Retrieves the raw cookie value.
    * Returns null if the cookie doesn't exist.
    */
-  private getToken(): string | null {
+  get token(): string | null {
     return Cookies.get(this.cookieName) ?? null;
   }
 
   /** * Decodes the JWT payload from the cookie.  * Returns the parsed payload object or null if the cookie doesn't exist, * is not a valid JWT, or cannot be parsed.
    */
   get payload(): JWTPayload | null {
-    const token = this.getToken();
+    const token = this.token;
     if (!token) {
       console.log(`Cookie "${this.cookieName}" not found.`);
       return null;
@@ -115,6 +115,10 @@ export class CookieHelper {
    */
   clear(): void {
     Cookies.remove(this.cookieName);
+  }
+
+  setCookie(jwtToken: string): void {
+    Cookies.set(this.cookieName, jwtToken);
   }
 }
 

@@ -12,7 +12,7 @@ import { ActionConfirmationDialog } from "@/components/action_confirmation_dialo
 import { toast } from "sonner"; // Import toast for notifications
 
 // --- Delete Action ---
-export function DeletePlanAction({ planId }: { planId: number }) {
+export function DeletePlanAction({ planId }: Readonly<{ planId: number }>) {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: () => deleteSciencePlan(planId), // Pass planId correctly if API expects it
@@ -30,7 +30,7 @@ export function DeletePlanAction({ planId }: { planId: number }) {
     <Button
       variant="ghost"
       size="icon"
-      className="hover:bg-red-100 text-red-600"
+      className="hover:bg-red-100 text-red-600 cursor-pointer"
     >
       <IconTrashFilled size={20} />
       <span className="sr-only">Delete Plan</span>
@@ -51,7 +51,7 @@ export function DeletePlanAction({ planId }: { planId: number }) {
 }
 
 // --- Submit Action ---
-export function SubmitPlanAction({ planId }: { planId: number }) {
+export function SubmitPlanAction({ planId }: Readonly<{ planId: number }>) {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: () => submitSciencePlan(planId),
@@ -71,7 +71,7 @@ export function SubmitPlanAction({ planId }: { planId: number }) {
     <Button
       variant="ghost"
       size="icon"
-      className="hover:bg-blue-100 text-blue-600"
+      className="hover:bg-blue-100 text-blue-600 cursor-pointer"
     >
       <IconBrandTelegram size={20} />
       <span className="sr-only">Submit Plan</span>
@@ -93,7 +93,7 @@ export function SubmitPlanAction({ planId }: { planId: number }) {
 }
 
 // --- Test Action ---
-export function TestPlanAction({ planId }: { planId: number }) {
+export function TestPlanAction({ planId }: Readonly<{ planId: number }>) {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: () => testSciencePlan(planId), // Assuming testSciencePlan takes planId
@@ -111,7 +111,7 @@ export function TestPlanAction({ planId }: { planId: number }) {
     <Button
       variant="ghost"
       size="icon"
-      className="hover:bg-purple-100 text-purple-600"
+      className="hover:bg-purple-100 text-purple-600 cursor-pointer"
     >
       <IconFlaskFilled size={20} />
       <span className="sr-only">Test Plan</span>

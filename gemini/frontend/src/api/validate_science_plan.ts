@@ -1,10 +1,24 @@
-export async function validateSciencePlan(planID: number) {
-  const apiUrl = import.meta.env.VITE_API_URL;
-  return await fetch(apiUrl + "/scienceplan/validate", {
+import { CookieHelper } from "@/lib/cookie_helper";
+import { BaseResponse } from "@/lib/interfaces";
+
+export async function validateSciencePlan(
+  planId: number
+): Promise<BaseResponse> {
+  const authCookie = new CookieHelper(import.meta.env.VITE_AUTH_COOKIE);
+
+  const res = await fetch(`/api/scienceplan/validate?planId=${planId}`, {
     method: "PUT",
     headers: {
+      Authorization: `Bearer ${authCookie.token}`,
       "Content-type": "application/json",
     },
-    body: JSON.stringify(planID),
   });
+
+  const data = (await res.json()) as BaseResponse;
+
+  if (!res.ok) {
+    throw new Error(data.message);
+  }
+
+  return data;
 }

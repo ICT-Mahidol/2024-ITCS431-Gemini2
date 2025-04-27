@@ -10,7 +10,7 @@ import {
 // Helper function remains the same
 function StatusBackgroundColor(status: PlanStatus): string {
   switch (status) {
-    case PlanStatus.CREATED:
+    case PlanStatus.SAVED:
       return "text-orange-700 bg-orange-100 dark:bg-orange-900/50 dark:text-orange-300";
     case PlanStatus.TESTED:
       return "text-blue-700 bg-blue-100 dark:bg-blue-900/50 dark:text-blue-300";
@@ -30,7 +30,7 @@ export function SciencePlanCard({
   // Determine which action icon/component to show based on status
   const renderPlanAction = () => {
     switch (planStatus) {
-      case PlanStatus.CREATED:
+      case PlanStatus.SAVED:
         return <TestPlanAction planId={planId} />;
       case PlanStatus.TESTED:
         return <SubmitPlanAction planId={planId} />;

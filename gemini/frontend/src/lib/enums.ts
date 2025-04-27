@@ -1,5 +1,5 @@
 export enum PlanStatus {
-  CREATED = "CREATED",
+  SAVED = "SAVED",
   TESTED = "TESTED",
   SUBMITTED = "SUBMITTED",
   VALIDATED = "VALIDATED",

@@ -14,11 +14,13 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { toast } from "sonner";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { login } from "@/api/login";
 import { loginSchema } from "./schemas";
+import { CookieHelper } from "@/lib/cookie_helper";
 
 export function LoginForm() {
+  const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: (_data, variables) => {
@@ -28,10 +30,19 @@ export function LoginForm() {
     },
     onError: (error) => {
       toast("Something went wrong!", {
-        description: `Error ${error}`,
+        description: `Error ${error.message}`,
       });
     },
   });
+
+  if (mutation.isSuccess) {
+    const authCookie = new CookieHelper(import.meta.env.VITE_AUTH_COOKIE);
+    authCookie.setCookie(mutation.data.token);
+    navigate({
+      from: "/",
+      to: "/scienceplan",
+    });
+  }
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),

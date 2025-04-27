@@ -30,6 +30,7 @@ export const createSciencePlanSchema = z
   .object({
     planName: z.string().min(1, { message: "Science plan name is required." }),
     funding: z.coerce.number(),
+    starSystem: z.string().min(1, { message: "Star System is" }),
     objective: z
       .string()
       .min(1, { message: "Science plan objective is required" }),
@@ -39,6 +40,9 @@ export const createSciencePlanSchema = z
     endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
       message: "endDate must be in YYYY-MM-DD format",
     }),
+    telescopeLocation: z
+      .string()
+      .min(1, { message: "Telescope Location is required" }),
     dataProcessingReq: createSciencePlanDataProcessingSchema,
   })
   .refine(
