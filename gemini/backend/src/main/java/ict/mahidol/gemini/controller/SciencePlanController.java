@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,12 +29,12 @@ import ict.mahidol.gemini.repository.SciencePlanRepository;
 import ict.mahidol.gemini.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.GetMapping;
 
 
 @Controller
 @RequestMapping("/api/v1/scienceplan")
 public class SciencePlanController {
+
     @Autowired
     private SciencePlanRepository sciencePlanRepository;
     @Autowired
@@ -41,13 +42,9 @@ public class SciencePlanController {
 
     @CrossOrigin
     @PostMapping("/create")
-    public @ResponseBody ResponseEntity<Map<String, String>> createSciencePlan(
+    public @ResponseBody
+    ResponseEntity<Map<String, String>> createSciencePlan(
             @RequestBody SciencePlanDto sciencePlan, HttpServletRequest request) {
-
-        // Handle missing authorization header
-        if (request.getHeader("Authorization") == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "There's no authorization header attached"));
-        }
 
         // Accessing JWT-authenticated user info
         Claims claims = (Claims) request.getAttribute("claims");
@@ -126,13 +123,41 @@ public class SciencePlanController {
         }
 
         // Update the science plan status and submitter
-        sciencePlan.get().setPlanStatus("submitted");
+        sciencePlan.get().setPlanStatus("SUBMITTED");
         sciencePlan.get().setSubmitter(submitter);
 
         // Save the updated science plan to the database
         sciencePlanRepository.save(sciencePlan.get());
 
         return ResponseEntity.ok(Map.of("message", "Suceessfully submitted science plan."));
+    }
+
+    @CrossOrigin
+    @PutMapping("/test")
+    public @ResponseBody
+    ResponseEntity<Map<String, String>> testSciencePlan(@RequestParam("planId") Integer planId, HttpServletRequest request) 
+    {
+        Claims claims = (Claims) request.getAttribute("claims");
+        String role = claims.get("role", String.class);
+        if (!role.equals("astronomer")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Access denied"));
+        }
+
+        if (planId == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
+        }
+
+        Optional<SciencePlan> sciencePlan = sciencePlanRepository.findById(planId);
+
+        if (!sciencePlan.isPresent()) {
+            return ResponseEntity.status(404)
+                    .body(Map.of("message", "No science plan record with id: " + planId + " found"));
+        }
+
+        sciencePlan.get().setPlanStatus("TESTED");
+        sciencePlanRepository.save(sciencePlan.get());
+
+        return ResponseEntity.ok(Map.of("message", "successfully tested science plan"));
     }
 
     @CrossOrigin
