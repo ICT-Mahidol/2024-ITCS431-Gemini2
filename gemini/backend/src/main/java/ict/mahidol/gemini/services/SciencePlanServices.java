@@ -67,6 +67,31 @@ public class SciencePlanServices {
         return ResponseEntity.ok(Map.of("message", "Science plan created successfully"));
     }
 
+    public @ResponseBody ResponseEntity<Map<String, String>> TestSciencePlan(String role, Integer planId)
+    {
+        if (!role.equals("astronomer")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Access denied"));
+        }
+
+        if (planId == null) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Missing/Invalid parameters"));
+        }
+
+        Optional<SciencePlan> sciencePlan = sciencePlanRepository.findById(planId);
+
+        if (!sciencePlan.isPresent()) {
+            return ResponseEntity.status(404)
+                    .body(Map.of("message", "No science plan record with id: " + planId + " found"));
+        }
+
+        if(!"SAVED".equals(sciencePlan.get().getPlanStatus())) return ResponseEntity.badRequest().body(Map.of("message", "This plan is already tested"));
+
+        sciencePlan.get().setPlanStatus("TESTED");
+        sciencePlanRepository.save(sciencePlan.get());
+
+        return ResponseEntity.ok(Map.of("message", "successfully tested science plan"));
+    }
+
     public ResponseEntity<Map<String, String>> SubmitSciencePlan(String username, String role, Integer planId)
     {
         // Handle unauthorized access
@@ -91,7 +116,7 @@ public class SciencePlanServices {
                     .body(Map.of("message", "No science plan record with id: " + planId + " found"));
         }
 
-        if(!"SAVED".equals(sciencePlan.get().getPlanStatus())) return ResponseEntity.badRequest().body(Map.of("message", "This plan is already submitted"));
+        if(!"TESTED".equals(sciencePlan.get().getPlanStatus())) return ResponseEntity.badRequest().body(Map.of("message", "Unable to submit untested Science Plan/This plan is already submitted"));
 
         // Update the science plan status and submitter
         sciencePlan.get().setPlanStatus("SUBMITTED");
@@ -103,9 +128,9 @@ public class SciencePlanServices {
         return ResponseEntity.ok(Map.of("message", "Suceessfully submitted science plan."));
     }
 
-    public @ResponseBody ResponseEntity<Map<String, String>> TestSciencePlan(String role, Integer planId)
+    public @ResponseBody ResponseEntity<Map<String, String>> ValidateSciencePlan(String role, Integer planId)
     {
-        if (!role.equals("astronomer")) {
+        if (!role.equals("scienceObserver")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Access denied"));
         }
 
@@ -120,9 +145,9 @@ public class SciencePlanServices {
                     .body(Map.of("message", "No science plan record with id: " + planId + " found"));
         }
 
-        if(!"SUBMITTED".equals(sciencePlan.get().getPlanStatus())) return ResponseEntity.badRequest().body(Map.of("message", "Unable to test unsubmitted Science Plan/This plan is already tested"));
+        if(!"SUBMITTED".equals(sciencePlan.get().getPlanStatus())) return ResponseEntity.badRequest().body(Map.of("message", "Unable to validate unsubmitted Science Plan/This plan is already validated"));
 
-        sciencePlan.get().setPlanStatus("TESTED");
+        sciencePlan.get().setPlanStatus("VALIDATED");
         sciencePlanRepository.save(sciencePlan.get());
 
         return ResponseEntity.ok(Map.of("message", "successfully tested science plan"));
