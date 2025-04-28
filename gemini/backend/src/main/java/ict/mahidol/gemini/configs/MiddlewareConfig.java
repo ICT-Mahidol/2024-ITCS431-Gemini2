@@ -18,6 +18,7 @@ public class MiddlewareConfig {
         FilterRegistrationBean<Middleware> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(middleware);
         registrationBean.addUrlPatterns("/api/v1/scienceplan/*");
+        registrationBean.addUrlPatterns("/api/v1/data/*");
         return registrationBean;
     }
 }
