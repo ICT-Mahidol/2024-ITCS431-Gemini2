@@ -14,25 +14,26 @@ const TestButton: React.FC<TestButtonProps> = ({ id }) => {
     mutationFn: testSciencePlan,
     onSuccess: () => {
       toast.success("Science plan tested successfully");
+      navigate({ to: "/scienceplan" }); // move navigate() here
     },
     onError: (error) => {
-      toast.error(`Error testing science plan ${error.message}`);
+      toast.error(`Error testing science plan: ${error.message}`);
     },
   });
+
   const handleTest = () => {
     mutation.mutate(Number(id));
-    navigate({
-      to: "/scienceplan",
-    });
   };
 
   return (
     <button
-      className="bg-green-500 text-white px-4 py-2 rounded"
+      className="bg-green-500 text-white px-4 py-2 rounded disabled:opacity-50"
       onClick={handleTest}
+      disabled={mutation.isPending} // disable while waiting
     >
-      Test
+      {mutation.isPending ? "Testing..." : "Test"}
     </button>
   );
 };
+
 export default TestButton;

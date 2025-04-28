@@ -21,7 +21,7 @@ const ValidateButton: React.FC<SubmitButtonProps> = ({ id }) => {
   const handleValidate = async () => {
     mutation.mutate(Number(id));
     navigate({
-      to: "/scienceplan",
+      to: "/scienceplan/validate",
     });
   };
 

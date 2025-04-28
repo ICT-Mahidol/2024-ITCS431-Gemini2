@@ -73,22 +73,26 @@ function RouteComponent() {
   return (
     <div>
       <main className="p-4">
-        {" "}
         {/* Added padding */}
         <DashboardHeader />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {data && data.length > 0 ? (
-            data
-              .filter((val) => val.planStatus === "SUBMITTED") // Filter for planStatus="TESTED"
-              .map((val) => (
-                // Render component correctly
-                <ValidateSciencePlanCard
-                  key={val.planId} // Add key prop
-                  planId={val.planId}
-                  planName={val.planName}
-                  planStatus={val.planStatus}
-                />
-              ))
+          {data ? (
+            data.filter((val) => val.planStatus === "SUBMITTED").length > 0 ? (
+              data
+                .filter((val) => val.planStatus === "SUBMITTED")
+                .map((val) => (
+                  <ValidateSciencePlanCard
+                    key={val.planId} // Add key prop
+                    planId={val.planId}
+                    planName={val.planName}
+                    planStatus={val.planStatus}
+                  />
+                ))
+            ) : (
+              <p className="col-span-full text-muted-foreground">
+                No science plans found to be validated.
+              </p>
+            )
           ) : (
             <p className="col-span-full text-muted-foreground">
               No science plans found to be validated.
