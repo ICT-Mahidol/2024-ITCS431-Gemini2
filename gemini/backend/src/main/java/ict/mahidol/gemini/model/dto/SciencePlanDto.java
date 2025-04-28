@@ -1,12 +1,8 @@
 package ict.mahidol.gemini.model.dto;
 
 import java.util.Date;
-import ict.mahidol.gemini.model.DataProcessingRequirement;
 
 public class SciencePlanDto {
-    private String planName;
-    private String creator;
-    private String submitter;
     private double funding = -1;
     private String objective;
     private String starSystem;
@@ -14,21 +10,9 @@ public class SciencePlanDto {
     private Date endDate;
     private String telescopeLocation;
     private String planStatus;
-    private DataProcessingRequirement dataProcessingReq;
+    private DataProcessingRequirementDto dataProcessingReq;
 
     // Getters
-    public String getPlanName() {
-        return planName;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-
-    public String getSubmitter() {
-        return submitter;
-    }
-
     public double getFunding() {
         return funding;
     }
@@ -57,23 +41,11 @@ public class SciencePlanDto {
         return planStatus;
     }
 
-    public DataProcessingRequirement getDataProcessingReq() {
+    public DataProcessingRequirementDto getDataProcessingReq() {
         return dataProcessingReq;
     }
 
     // Setters
-    public void setPlanName(String planName) {
-        this.planName = planName;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
-
-    public void setSubmitter(String submitter) {
-        this.submitter = submitter;
-    }
-
     public void setFunding(double funding) {
         this.funding = funding;
     }
@@ -102,7 +74,7 @@ public class SciencePlanDto {
         this.planStatus = planStatus;
     }
 
-    public void setDataProcessingReq(DataProcessingRequirement dataProcessingReq) {
+    public void setDataProcessingReq(DataProcessingRequirementDto dataProcessingReq) {
         this.dataProcessingReq = dataProcessingReq;
     }
 }

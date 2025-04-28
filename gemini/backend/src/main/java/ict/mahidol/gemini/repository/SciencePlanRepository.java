@@ -1,12 +1,12 @@
-package ict.mahidol.gemini.repository;
+// package ict.mahidol.gemini.repository;
 
-import java.util.List;
+// import java.util.List;
 
-import org.springframework.data.repository.CrudRepository;
+// import org.springframework.data.repository.CrudRepository;
 
-import ict.mahidol.gemini.model.SciencePlan;
+// import ict.mahidol.gemini.model.SciencePlan;
 
-public interface SciencePlanRepository extends CrudRepository<SciencePlan, Integer> {
+// public interface SciencePlanRepository extends CrudRepository<SciencePlan, Integer> {
     
-    public List<SciencePlan> findByPlanStatus(String planStatus);
-}
+//     public List<SciencePlan> findByPlanStatus(String planStatus);
+// }

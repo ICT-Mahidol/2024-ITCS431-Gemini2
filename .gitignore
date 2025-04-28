@@ -3,3 +3,5 @@
 ## Database ###
 gemini/backend/util/db/gemini.db.mv.db
 gemini/backend/util/db/gemini.db.trace.db
+gemini/backend/ocs.mv.db
+gemini/backend/ocs.trace.db
