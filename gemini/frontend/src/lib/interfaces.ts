@@ -21,16 +21,16 @@ export interface SciencePlan {
 }
 
 export interface SciencePlanDetails {
-  planId: number;
+  planNo: number;
   planName: string;
   creator: string;
   submitter: string;
-  funding: number;
-  objective: string;
+  fundingInUSD: number;
+  objectives: string;
   startDate: Date;
   endDate: Date;
-  planStatus: PlanStatus;
-  dataProcessingReq: DataProcessingRequirement;
+  status: PlanStatus;
+  dataProcRequirements: DataProcessingRequirement[];
 }
 
 export interface DataProcessingRequirement {
@@ -40,7 +40,7 @@ export interface DataProcessingRequirement {
   contrast: number;
   brightness: number;
   saturation: number;
-  highlight: number;
+  highlights: number;
   exposure: number;
   shadows: number;
   whites: number;

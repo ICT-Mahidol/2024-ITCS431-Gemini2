@@ -21,8 +21,8 @@ export enum FileQuality {
 }
 
 export enum ColorType {
-  COLOR = "Color",
-  BW = "BW",
+  COLOR = "Color mode",
+  BW = "B&W mode",
 }
 
 export enum Role {

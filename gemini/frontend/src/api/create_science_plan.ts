@@ -8,6 +8,8 @@ export async function createSciencePlan(
 ): Promise<BaseResponse> {
   const authCookie = new CookieHelper(import.meta.env.VITE_AUTH_COOKIE);
 
+  console.log(values);
+
   const res = await fetch("/api/scienceplan/create", {
     method: "POST",
     headers: {

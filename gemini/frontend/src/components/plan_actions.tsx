@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   IconBrandTelegram,
+  IconCopyCheck,
   IconFlaskFilled,
   IconTrashFilled,
 } from "@tabler/icons-react";
@@ -10,6 +11,7 @@ import { submitSciencePlan } from "@/api/submit_science_plan";
 import { deleteSciencePlan } from "@/api/delete_science_plan";
 import { ActionConfirmationDialog } from "@/components/action_confirmation_dialog"; // Adjust path
 import { toast } from "sonner"; // Import toast for notifications
+import { validateSciencePlan } from "@/api/validate_science_plan";
 
 // --- Delete Action ---
 export function DeletePlanAction({ planId }: Readonly<{ planId: number }>) {
@@ -127,6 +129,46 @@ export function TestPlanAction({ planId }: Readonly<{ planId: number }>) {
       confirmButtonText="Test"
       confirmButtonVariant="default"
       confirmButtonClassName="bg-purple-600 hover:bg-purple-700"
+      isPending={mutation.isPending}
+    />
+  );
+}
+
+// VADILATE ACTION
+export function ValidatePlanAction({ planId }: Readonly<{ planId: number }>) {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: () => validateSciencePlan(planId), // Assuming testSciencePlan takes planId
+    onSuccess: () => {
+      toast.success(`Science plan ${planId} validated successfully.`);
+      queryClient.invalidateQueries({ queryKey: ["sciencePlans"] });
+    },
+    onError: (error) => {
+      toast.error(`Error validate science plan: ${error.message}`);
+      console.error("Error validate science plan:", error);
+    },
+  });
+
+  const trigger = (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="hover:bg-purple-100 text-green-600 cursor-pointer"
+    >
+      <IconCopyCheck stroke={2} />
+      <span className="sr-only">Test Plan</span>
+    </Button>
+  );
+
+  return (
+    <ActionConfirmationDialog
+      triggerButton={trigger}
+      dialogTitle="Confirm Validate plan"
+      dialogDescription="Are you sure you want to test this science plan? Its status will change to VALIDATED."
+      confirmAction={() => mutation.mutate()}
+      confirmButtonText="Validate"
+      confirmButtonVariant="default"
+      confirmButtonClassName="bg-green-600 hover:bg-purple-700"
       isPending={mutation.isPending}
     />
   );
