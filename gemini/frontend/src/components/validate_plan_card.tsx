@@ -30,7 +30,7 @@ export function ValidateSciencePlanCard({
       <div className="group border dark:border-gray-700 shadow-sm rounded-lg p-4 flex justify-between items-center bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
         {/* Wrap main content in a Link for navigation */}
         <Link
-          to="/scienceplan/$plan_id" // Adjust route if needed
+          to="/scienceplan/validate/$plan_id" // Adjust route if needed
           params={{ plan_id: planId.toString() }} // Ensure planId is string if needed by route
           className="flex-grow min-w-0 mr-4" // Allow link to grow and prevent text overflow issues
         >

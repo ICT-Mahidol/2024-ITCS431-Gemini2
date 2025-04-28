@@ -6,32 +6,115 @@ export function sciencePlanDetailsUI(sciencePlan: SciencePlanDetails) {
   const req: DataProcessingRequirement[] = sciencePlan.dataProcRequirements;
   console.log(req);
   return (
-    <div className="flex flex-col gap-4 mx-3 my-3 border w-full ">
-      <div>
-        <div>Plan ID: {sciencePlan.planId}</div>
-        <div>Plan Name: {sciencePlan.planName}</div>
-        <div>Plan Status: {sciencePlan.planStatus}</div>
-        <div>Plan Creator: {sciencePlan.creator}</div>
-        <div>Funding: {sciencePlan.funding}</div>
-        <div>Objective: {sciencePlan.objective}</div>
-        <div>Plan Start Date: {String(sciencePlan.startDate)}</div>
-        <div>Plan End Date: {String(sciencePlan.endDate)}</div>
-        <div>Plan Status: {sciencePlan.planStatus}</div>
-        {req.map((val) => (
-          <div>
-            <div>File Type: {val.fileType}</div>
-            <div>File Quality: {val.fileQuality}</div>
-            <div>Color Type: {val.colorType}</div>
-            <div>Contrast: {val.contrast}</div>
-            <div>Brightness: {val.brightness}</div>
-            <div>Saturation: {val.saturation}</div>
-            <div>Highlight: {val.highlight}</div>
-            <div>Exposure: {val.exposure}</div>
-            <div>Shadows: {val.shadows}</div>
-            <div>Whites: {val.whites}</div>
-          </div>
-        ))}
+    // this is vibe code! cr. Gemini 2.5 DONT ASK ME WHAT IS IT
+    <div className="flex flex-col gap-4 p-6 mx-3 my-3 border border-gray-300 rounded-2xl shadow-md bg-white w-full">
+      <div className="text-2xl font-bold text-indigo-600 mb-4">
+        Science Plan Details
       </div>
+      <div className="grid grid-cols-2 gap-4 text-gray-700">
+        <div>
+          <span className="font-semibold">Plan ID:</span> {sciencePlan.planNo}
+        </div>
+        <div>
+          <span className="font-semibold">Plan Name:</span>{" "}
+          {sciencePlan.planName}
+        </div>
+        <div>
+          <span className="font-semibold">Plan Status:</span>
+          <span
+            className={`ml-2 px-2 py-1 rounded-lg text-white text-sm
+              ${
+                sciencePlan.status === "SUBMITTED"
+                  ? "bg-green-500"
+                  : sciencePlan.status === "TESTED"
+                    ? "bg-blue-500"
+                    : sciencePlan.status === "SAVED"
+                      ? "bg-yellow-500"
+                      : sciencePlan.status === "VALIDATED"
+                        ? "bg-gray-400"
+                        : "bg-gray-400"
+              }
+              `}
+          >
+            {sciencePlan.status}
+          </span>
+        </div>
+        <div>
+          <span className="font-semibold">Plan Creator:</span>{" "}
+          {sciencePlan.creator}
+        </div>
+        <div>
+          <span className="font-semibold">Funding (USD):</span> $
+          {sciencePlan.fundingInUSD}
+        </div>
+        <div>
+          <span className="font-semibold">Objective:</span>{" "}
+          {sciencePlan.objectives}
+        </div>
+        <div>
+          <span className="font-semibold">Start Date:</span>{" "}
+          {String(sciencePlan.startDate)}
+        </div>
+        <div>
+          <span className="font-semibold">End Date:</span>{" "}
+          {String(sciencePlan.endDate)}
+        </div>
+      </div>
+
+      {req.length > 0 && (
+        <div className="mt-6">
+          <div className="text-xl font-semibold text-indigo-500 mb-2">
+            File Requirements
+          </div>
+          <div className="grid grid-cols-2 gap-4 text-gray-700">
+            {req.map((val, index) => (
+              <div
+                key={index}
+                className="border p-4 rounded-xl bg-gray-50 shadow-sm"
+              >
+                <div>
+                  <span className="font-semibold">File Type:</span>{" "}
+                  {val.fileType}
+                </div>
+                <div>
+                  <span className="font-semibold">File Quality:</span>{" "}
+                  {val.fileQuality}
+                </div>
+                <div>
+                  <span className="font-semibold">Color Type:</span>{" "}
+                  {val.colorType}
+                </div>
+                <div>
+                  <span className="font-semibold">Contrast:</span>{" "}
+                  {val.contrast}
+                </div>
+                <div>
+                  <span className="font-semibold">Brightness:</span>{" "}
+                  {val.brightness}
+                </div>
+                <div>
+                  <span className="font-semibold">Saturation:</span>{" "}
+                  {val.saturation}
+                </div>
+                <div>
+                  <span className="font-semibold">Highlight:</span>{" "}
+                  {val.highlights}
+                </div>
+                <div>
+                  <span className="font-semibold">Exposure:</span>{" "}
+                  {val.exposure}
+                </div>
+                <div>
+                  <span className="font-semibold">Shadows:</span> {val.shadows}
+                </div>
+                <div>
+                  <span className="font-semibold">Whites:</span> {val.whites}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

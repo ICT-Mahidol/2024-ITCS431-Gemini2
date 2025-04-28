@@ -33,10 +33,10 @@ function RouteComponent() {
       <main>
         <div>{sciencePlanDetailsUI(SciencePlanDetailsMock)}</div>
         <DeleteButton id={planId.toString()} />
-        {SciencePlanDetailsMock.planStatus === PlanStatus.SAVED && (
+        {SciencePlanDetailsMock.status === PlanStatus.SAVED && (
           <TestButton id={plan_id} />
         )}
-        {SciencePlanDetailsMock.planStatus === PlanStatus.SUBMITTED && (
+        {SciencePlanDetailsMock.status === PlanStatus.SUBMITTED && (
           <SubmitButton id={plan_id} />
         )}
       </main>
@@ -47,10 +47,10 @@ function RouteComponent() {
     <main>
       <div>{sciencePlanDetailsUI(data)}</div>
       <DeleteButton id={planId.toString()} />
-      {data.planStatus === PlanStatus.SAVED && (
+      {data.status === PlanStatus.SAVED && (
         <TestButton id={planId.toString()} />
       )}
-      {data.planStatus === PlanStatus.SUBMITTED && (
+      {data.status === PlanStatus.TESTED && (
         <SubmitButton id={planId.toString()} />
       )}
     </main>
