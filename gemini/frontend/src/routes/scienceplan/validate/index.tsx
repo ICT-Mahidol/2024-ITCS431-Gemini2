@@ -79,7 +79,7 @@ function RouteComponent() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {data && data.length > 0 ? (
             data
-              .filter((val) => val.planStatus === "TESTED") // Filter for planStatus="TESTED"
+              .filter((val) => val.planStatus === "SUBMITTED") // Filter for planStatus="TESTED"
               .map((val) => (
                 // Render component correctly
                 <ValidateSciencePlanCard

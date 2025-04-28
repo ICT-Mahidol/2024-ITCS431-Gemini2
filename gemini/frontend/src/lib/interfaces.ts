@@ -30,7 +30,7 @@ export interface SciencePlanDetails {
   startDate: Date;
   endDate: Date;
   planStatus: PlanStatus;
-  dataProcessingReq: DataProcessingRequirement;
+  dataProcRequirements: DataProcessingRequirement[];
 }
 
 export interface DataProcessingRequirement {

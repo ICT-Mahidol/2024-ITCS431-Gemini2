@@ -31,9 +31,9 @@ export function SciencePlanCard({
   const renderPlanAction = () => {
     switch (planStatus) {
       case PlanStatus.SAVED:
-        return <SubmitPlanAction planId={planId} />;
-      case PlanStatus.TESTED:
         return <TestPlanAction planId={planId} />;
+      case PlanStatus.TESTED:
+        return <SubmitPlanAction planId={planId} />;
       case PlanStatus.SUBMITTED:
         // No action icon needed for submitted (or add view icon etc.)
         return null;

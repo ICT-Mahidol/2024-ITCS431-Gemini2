@@ -33,8 +33,11 @@ import { ColorType, FileQuality, FileType } from "@/lib/enums";
 import { createSciencePlan } from "@/api/create_science_plan";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Label } from "@radix-ui/react-label";
+import { useState, useEffect } from "react";
 
 export function CreateSciencePlanForm() {
+  const [color, setColor] = useState(ColorType.COLOR);
   const mutation = useMutation({
     mutationFn: createSciencePlan,
     onSuccess: () => {
@@ -58,7 +61,7 @@ export function CreateSciencePlanForm() {
       dataProcessingReq: {
         fileType: FileType.JPEG,
         fileQuality: FileQuality.FINE,
-        colorType: ColorType.COLOR,
+        colorType: color,
         contrast: 0,
         exposure: 0,
         brightness: 0,
@@ -73,8 +76,12 @@ export function CreateSciencePlanForm() {
     },
   });
 
-  // Watch the colorType field to conditionally render sections
+  useEffect(() => {
+    form.setValue("dataProcessingReq.colorType", color);
+  }, [color]);
+
   const watchedColorType = form.watch("dataProcessingReq.colorType");
+  // Watch the colorType field to conditionally render sections
 
   // This function will be called ONLY after successful validation
   // function onSubmit(values: z.infer<typeof createSciencePlanSchema>) {
@@ -88,7 +95,7 @@ export function CreateSciencePlanForm() {
     const currentValues = form.getValues(); // Get current form values
     // console.log("Confirmed Submit:", currentValues);
     mutation.mutate(currentValues); // Call mutation with current values
-    form.reset();
+    // form.reset();
   };
 
   return (
@@ -126,8 +133,8 @@ export function CreateSciencePlanForm() {
                       <SelectValue placeholder="Select Telescope Location" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Hawaii">Hawaii</SelectItem>
-                      <SelectItem value="Chile">Chile</SelectItem>
+                      <SelectItem value="HAWAII">HAWAII</SelectItem>
+                      <SelectItem value="CHILE">CHILE</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -215,40 +222,22 @@ export function CreateSciencePlanForm() {
         <h3 className="text-lg font-medium border-t pt-4 mt-4">
           Data Processing Requirements
         </h3>
-        <FormField
-          control={form.control}
-          name="dataProcessingReq.colorType"
-          render={({ field }) => (
-            <FormItem className="space-y-2">
-              <FormLabel>Picture Color Mode</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  className="flex items-center space-x-4"
-                >
-                  <FormItem className="flex items-center space-x-2">
-                    <FormControl>
-                      <RadioGroupItem value={ColorType.COLOR} id="color" />
-                    </FormControl>
-                    <FormLabel htmlFor="color" className="font-normal">
-                      Color
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-2">
-                    <FormControl>
-                      <RadioGroupItem value={ColorType.BW} id="bw" />
-                    </FormControl>
-                    <FormLabel htmlFor="bw" className="font-normal">
-                      Black & White
-                    </FormLabel>
-                  </FormItem>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <RadioGroup
+          defaultValue={color}
+          onValueChange={(val) => {
+            setColor(val as ColorType);
+            console.log(val);
+          }}
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value={ColorType.COLOR} id="option-one" />
+            <Label htmlFor="option-one">Color mode</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value={ColorType.BW} id="option-two" />
+            <Label htmlFor="option-two">B&W mode</Label>
+          </div>
+        </RadioGroup>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <FormField
             control={form.control}

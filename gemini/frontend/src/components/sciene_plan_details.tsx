@@ -3,7 +3,8 @@ import {
   DataProcessingRequirement,
 } from "@/lib/interfaces";
 export function sciencePlanDetailsUI(sciencePlan: SciencePlanDetails) {
-  const req: DataProcessingRequirement = sciencePlan.dataProcessingReq;
+  const req: DataProcessingRequirement[] = sciencePlan.dataProcRequirements;
+  console.log(req);
   return (
     <div className="flex flex-col gap-4 mx-3 my-3 border w-full ">
       <div>
@@ -16,17 +17,20 @@ export function sciencePlanDetailsUI(sciencePlan: SciencePlanDetails) {
         <div>Plan Start Date: {String(sciencePlan.startDate)}</div>
         <div>Plan End Date: {String(sciencePlan.endDate)}</div>
         <div>Plan Status: {sciencePlan.planStatus}</div>
-        <div>File Type: {req.fileType}</div>
-        <div>File Quality: {req.fileQuality}</div>
-        <div>Color Type: {req.colorType}</div>
-        <div>Contrast: {req.contrast}</div>
-        <div>Brightness: {req.brightness}</div>
-        <div>Saturation: {req.saturation}</div>
-        <div>Highlight: {req.highlight}</div>
-        <div>Exposure: {req.exposure}</div>
-        <div>Shadows: {req.shadows}</div>
-        <div>Whites: {req.whites}</div>
-        <div></div>
+        {req.map((val) => (
+          <div>
+            <div>File Type: {val.fileType}</div>
+            <div>File Quality: {val.fileQuality}</div>
+            <div>Color Type: {val.colorType}</div>
+            <div>Contrast: {val.contrast}</div>
+            <div>Brightness: {val.brightness}</div>
+            <div>Saturation: {val.saturation}</div>
+            <div>Highlight: {val.highlight}</div>
+            <div>Exposure: {val.exposure}</div>
+            <div>Shadows: {val.shadows}</div>
+            <div>Whites: {val.whites}</div>
+          </div>
+        ))}
       </div>
     </div>
   );
