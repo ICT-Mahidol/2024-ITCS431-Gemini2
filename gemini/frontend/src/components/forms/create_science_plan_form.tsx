@@ -31,13 +31,24 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ColorType, FileQuality, FileType } from "@/lib/enums";
 import { createSciencePlan } from "@/api/create_science_plan";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Label } from "@radix-ui/react-label";
 import { useState, useEffect } from "react";
+import { getStarSystemEnum } from "@/api/get_star_system_enum";
+import { getTelescopeLocationEnum } from "@/api/get_telescope_location_enum";
 
 export function CreateSciencePlanForm() {
   const [color, setColor] = useState(ColorType.COLOR);
+  const starSystemQuery = useQuery({
+    queryKey: ["starSystemEnum"],
+    queryFn: getStarSystemEnum,
+  });
+  const telescopeLocationQuery = useQuery({
+    queryKey: ["telescopeLocationEnum"],
+    queryFn: getTelescopeLocationEnum,
+  });
+
   const mutation = useMutation({
     mutationFn: createSciencePlan,
     onSuccess: () => {
@@ -133,8 +144,12 @@ export function CreateSciencePlanForm() {
                       <SelectValue placeholder="Select Telescope Location" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="HAWAII">HAWAII</SelectItem>
-                      <SelectItem value="CHILE">CHILE</SelectItem>
+                      {telescopeLocationQuery.data?.map((location) => (
+                        <SelectItem key={location} value={location}>
+                          {location}
+                        </SelectItem>
+                      ))}
+                      {/* <SelectItem value="CHILE">CHILE</SelectItem> */}
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -169,7 +184,22 @@ export function CreateSciencePlanForm() {
               <FormItem>
                 <FormLabel>Star System</FormLabel>
                 <FormControl>
-                  <Input type="text" {...field} />
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-auto">
+                      <SelectValue placeholder="Select Star System" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {starSystemQuery.data?.map((system) => (
+                        // {/* <SelectItem value="HAWAII">HAWAII</SelectItem>
+                        <SelectItem key={system} value={system}>
+                          {system}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
