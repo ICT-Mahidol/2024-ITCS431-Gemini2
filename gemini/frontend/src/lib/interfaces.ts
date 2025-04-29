@@ -29,6 +29,8 @@ export interface SciencePlanDetails {
   objectives: string;
   startDate: Date;
   endDate: Date;
+  starSystem: string;
+  telescopeLocation: string;
   status: PlanStatus;
   dataProcRequirements: DataProcessingRequirement[];
 }

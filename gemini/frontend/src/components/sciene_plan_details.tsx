@@ -59,6 +59,14 @@ export function sciencePlanDetailsUI(sciencePlan: SciencePlanDetails) {
           <span className="font-semibold">End Date:</span>{" "}
           {String(sciencePlan.endDate)}
         </div>
+        <div>
+          <span className="font-semibold">Star System</span>{" "}
+          {String(sciencePlan.starSystem)}
+        </div>
+        <div>
+          <span className="font-semibold">Telescope Location</span>{" "}
+          {String(sciencePlan.telescopeLocation)}
+        </div>
       </div>
 
       {req.length > 0 && (
@@ -109,6 +117,16 @@ export function sciencePlanDetailsUI(sciencePlan: SciencePlanDetails) {
                 </div>
                 <div>
                   <span className="font-semibold">Whites:</span> {val.whites}
+                </div>
+                <div>
+                  <span className="font-semibold">Blacks:</span> {val.blacks}
+                </div>
+                <div>
+                  <span className="font-semibold">Luminance:</span>{" "}
+                  {val.luminance}
+                </div>
+                <div>
+                  <span className="font-semibold">Hue:</span> {val.hue}
                 </div>
               </div>
             ))}
