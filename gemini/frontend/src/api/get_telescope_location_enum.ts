@@ -12,7 +12,9 @@ export async function getTelescopeLocationEnum(): Promise<string[]> {
   });
 
   if (!response.ok) {
-    throw new Error("Something went wrong");
+    throw new Error(
+      `Request failed with status ${response.status}: ${response.statusText}`
+    );
   }
 
   const data = await response.json();

@@ -12,7 +12,9 @@ export async function getStarSystemEnum(): Promise<string[]> {
   });
 
   if (!response.ok) {
-    throw new Error("Something went wrong");
+    throw new Error(
+      `Failed to fetch star system enums: ${response.status} ${response.statusText}`
+    );
   }
   const data = await response.json();
   return data;
